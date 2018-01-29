@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+    <group android:id="@+id/referrer_group" android:checkableBehavior="single" android:orderInCategory="101" ></group>
+
+    <group android:id="@+id/upper_group" android:checkableBehavior="single" android:orderInCategory="101" >
         <item
             android:id="@+id/nav_camera"
             android:icon="@drawable/ic_menu_camera"
@@ -22,7 +24,7 @@
             android:title="Tools" />
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="Communicate" android:orderInCategory="101" >
         <menu>
             <item
                 android:id="@+id/nav_share"

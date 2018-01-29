@@ -40,6 +40,12 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        Menu menu = navigationView.getMenu();
+        menu.add(R.id.referrer_group, 121, Menu.NONE, "Add Child");
+        menu.add(R.id.referrer_group, 123, Menu.NONE, "Child 1");
+        menu.add(R.id.referrer_group, 124, Menu.NONE, "Child 2");
+        menu.add(R.id.referrer_group, 125, Menu.NONE, "Child 3");
     }
 
     @Override
@@ -56,6 +62,8 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+
+
         return true;
     }
 
