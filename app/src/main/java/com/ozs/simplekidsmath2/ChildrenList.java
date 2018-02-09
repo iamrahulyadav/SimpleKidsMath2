@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.Log;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xmlpull.v1.XmlPullParserFactory;
 import java.io.BufferedReader;
 import java.io.File;
@@ -19,6 +21,8 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+
+import android.os.Environment;
 /**
  * Created by z_savion on 08/02/2018.
  */
@@ -95,10 +99,8 @@ public class ChildrenList {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(doc);
-            StreamResult result = new StreamResult(new File(filename));
-
-            // Output to console for testing
-            // StreamResult result = new StreamResult(System.out);
+            String newFileName = myContext.getApplicationInfo().dataDir+"/" + filename;
+            StreamResult result = new StreamResult(new File(newFileName));
 
             transformer.transform(source, result);
             Log.d("XML Saved","Saved");
@@ -110,24 +112,55 @@ public class ChildrenList {
         }
     }
     public void LoadData(){
-        // File sdcard = Environment.getExternalStorageDirectory();
-        //Get the text file
-        File file = new File(filename);
-        //Read text from file
-        StringBuilder text = new StringBuilder();
-
         try {
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            String line;
 
-            while ((line = br.readLine()) != null) {
-                text.append(line);
-                text.append('\n');
+            String newFileName = myContext.getApplicationInfo().dataDir+"/" + filename;
+            File fXmlFile = new File(newFileName);
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.parse(fXmlFile);
+            //optional, but recommended
+            //read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
+            //doc.getDocumentElement().normalize();
+
+            NodeList nList = doc.getDocumentElement().getElementsByTagName("Childrens");
+            if (nList.getLength()==1)
+            {
+                Node node=nList.item(0);
+
+                if (node.getNodeType() == Node.ELEMENT_NODE) {
+
+                    childArrayList.clear();
+
+                    Element nChildrens = (Element) nList.item(0);
+                    NodeList nListC = nChildrens.getElementsByTagName("Child");
+                    // Loop on all the childrens
+                    for (int i = 0; i < nListC.getLength(); i++) {
+                        Node nChild= nListC.item(0);
+                        if (nChild.getNodeType() == Node.ELEMENT_NODE) {
+                            Element eChild = (Element) nListC.item(0);
+                            // Parse Child Data
+
+                            String name=eChild.getElementsByTagName("Name").item(0).getTextContent();
+                            String imgName=eChild.getElementsByTagName("ImgName").item(0).getTextContent();
+                            String createDate=eChild.getElementsByTagName("CreateDate").item(0).getTextContent();
+                            String updateDate=eChild.getElementsByTagName("UpdateDate").item(0).getTextContent();
+
+                            Child child=new Child(name);
+                            child.setImgName(imgName);
+                            Long lcreateDate=Long.parseLong(createDate);
+                            child.setCreateDate(lcreateDate);
+                            Long lupdateDate=Long.parseLong(updateDate);
+                            child.setCreateDate(lupdateDate);
+
+                            childArrayList.add(child);
+                        }
+                    }
+                }
             }
-            br.close();
-        }
-        catch (IOException e) {
-            //You'll need to add proper error handling here
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
