@@ -19,21 +19,21 @@
         app:layout_constraintStart_toStartOf="parent"
         tools:layout_editor_absoluteY="42dp" />
 
-    <ImageButton
-        android:id="@+id/imageButtonPic"
-        android:layout_width="64dp"
-        android:layout_height="68dp"
-        android:layout_marginLeft="28dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextName"
-        app:srcCompat="@drawable/ic_menu_camera" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="12dp"
+        android:onClick="onSelectImageClick"
+        android:text="@string/main_button_select_image"/>
 
     <ImageView
-        android:id="@+id/imageViewPic"
-        android:layout_width="290dp"
-        android:layout_height="251dp"
-        android:layout_marginLeft="28dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageButtonPic"
-        app:srcCompat="@drawable/ic_menu_gallery" />
+        android:id="@+id/quick_start_cropped_image"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:contentDescription="@string/result_image_desc"
+        android:src="@drawable/placeholder"/>
+
+
 </android.support.constraint.ConstraintLayout>
