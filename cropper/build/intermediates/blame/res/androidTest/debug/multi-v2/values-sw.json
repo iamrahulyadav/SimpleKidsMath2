@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "/Users/itzhaksavion/AndroidStudioProjects/SimpleKidsMath2/cropper/build/intermediates/incremental/mergeDebugAndroidTestResources/merged.dir/values-sw/values-sw.xml",
+            "outputFile": "/Users/itzhaksavion/AndroidstudioProjects/SimpleKidsMath2/cropper/build/intermediates/incremental/mergeDebugAndroidTestResources/merged.dir/values-sw/values-sw.xml",
             "map": [
                 {
                     "source": "/Users/itzhaksavion/.gradle/caches/transforms-1/files-1.1/support-compat-27.0.2.aar/5afaa7db35bde6e192b9fe21869f6bbb/res/values-sw/values-sw.xml",
