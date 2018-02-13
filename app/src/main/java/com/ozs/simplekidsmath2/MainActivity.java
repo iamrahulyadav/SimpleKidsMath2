@@ -23,10 +23,14 @@ import android.view.MenuItem;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    public static Boolean TRACE_FLAG = true;
     public static String CHILD_MODE = "CHILD_MODE";
     public static String CHILD_MODE_VALUE_ADD = "ADD";
     public static String CHILD_MODE_VALUE_CHG = "CHG";
     public static String CHILD_MODE_ID = "CHILD_MODE_ID";
+
+    protected ChildrenList m_clist;
+
 
     public static final  int ADD_CHILD_REQUEST=1;
     private ChildrenList childrenList;
@@ -61,8 +65,22 @@ public class MainActivity extends AppCompatActivity
 
         Menu menu = navigationView.getMenu();
         menu.add(R.id.referrer_group, 121, Menu.NONE, "Add Child");
+
+        // Add Childrens (up to 5)
+        int j=122;
+        m_clist=ChildrenList.getInstance();
+        m_clist.LoadData();
+
+        Child[] children=m_clist.getChildrenArray();
+        if (children!=null)
+        {
+            for(int i=0;((i<children.length)&&(i<4));i++){
+                menu.add(R.id.referrer_group, j, Menu.NONE, children[i].getName());
+                j++;
+            }
+        }
+
        /*
-        menu.add(R.id.referrer_group, 123, Menu.NONE, "Child 1");
         menu.add(R.id.referrer_group, 124, Menu.NONE, "Child 2");
         menu.add(R.id.referrer_group, 125, Menu.NONE, "Child 3");
         */

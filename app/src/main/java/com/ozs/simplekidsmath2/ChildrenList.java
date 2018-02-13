@@ -163,4 +163,23 @@ public class ChildrenList {
             e.printStackTrace();
         }
     }
+
+    public Child[] getChildrenArray(){
+        Object[] objs=childArrayList.toArray();
+        if (objs.length>0)
+        {
+            // Change the array type from object to child
+            Child[] children=new Child[objs.length];
+            for(int i=0;i<objs.length;i++)
+            {
+                Child child=(Child) objs[i];
+                children[i]=child;
+            }
+            return children;
+        }
+        else
+        {
+            return null;
+        }
+    }
 }

@@ -43,12 +43,9 @@ public class ChildMaintActivity extends AppCompatActivity {
 
     String       m_Mode;
     String       m_ModeId;
+    Boolean      m_flagClickSelect=false;
     EditText     etName;
-    ImageButton  ibPic;
     ChildrenList childList;
-    AlertDialog  alert=null;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -209,12 +206,13 @@ public class ChildMaintActivity extends AppCompatActivity {
     }
     /** Start pick image activity with chooser. */
     public void onSelectImageClick(View view) {
+        m_flagClickSelect=true;
         CropImage.activity()
                 .setGuidelines(CropImageView.Guidelines.ON)
                 .setActivityTitle("Crop Child Image")
                 .setCropShape(CropImageView.CropShape.RECTANGLE)
                 .setCropMenuCropButtonTitle("Done")
-                .setRequestedSize(400, 400)
+                .setRequestedSize(300, 300)
                 .setCropMenuCropButtonIcon(R.mipmap.ic_launcher)
                 .start(this);
     }
@@ -239,13 +237,13 @@ public class ChildMaintActivity extends AppCompatActivity {
 
     protected void SaveImage(){
 
+        // Create Pics Directory
         File rootPics = new File(getApplicationInfo().dataDir+File.separator+"pics");
         File rootDownload = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         if (!rootPics.exists())
         {
             rootPics.mkdirs();
         }
-
 
         ImageView  imageview = (ImageView) findViewById(R.id.quick_start_cropped_image);
         imageview.buildDrawingCache();
@@ -257,6 +255,9 @@ public class ChildMaintActivity extends AppCompatActivity {
             String s = getPackageName();
             File root = new File(getApplicationInfo().dataDir + File.separator + "pics" + File.separator);
             File sdImageMainDirectory = new File(root, m_ModeId+".jpg");
+            if (sdImageMainDirectory.exists()) {
+
+            }
             outputFileUri = Uri.fromFile(sdImageMainDirectory);
             fOut = new FileOutputStream(sdImageMainDirectory);
         } catch (Exception e) {
@@ -272,29 +273,38 @@ public class ChildMaintActivity extends AppCompatActivity {
         } catch (Exception e) {
         }
 
-        // For Debug, copy the file into Downloads Directory
+        if (MainActivity.TRACE_FLAG) {
+            // For Debug, copy the file into Downloads Directory
 
-        File root = new File(getApplicationInfo().dataDir + File.separator + "pics" + File.separator);
-        File sdImageMainDirectory = new File(root, m_ModeId+".jpg");
-        File dst = new File(rootDownload, m_ModeId+".jpg");
-        if (sdImageMainDirectory.exists()) {
-            // Copy the file
-            try (InputStream in = new FileInputStream(sdImageMainDirectory)) {
-                try (OutputStream out = new FileOutputStream(dst)) {
-                    // Transfer bytes from in to out
-                    byte[] buf = new byte[1024];
-                    int len;
-                    while ((len = in.read(buf)) > 0) {
-                        out.write(buf, 0, len);
+            File root = new File(getApplicationInfo().dataDir + File.separator + "pics" + File.separator);
+            File sdImageMainDirectory = new File(root, m_ModeId + ".jpg");
+            File dst = new File(rootDownload, m_ModeId + ".jpg");
+            if (sdImageMainDirectory.exists()) {
+                // Copy the file
+                try (InputStream in = new FileInputStream(sdImageMainDirectory)) {
+                    try (OutputStream out = new FileOutputStream(dst)) {
+                        // Transfer bytes from in to out
+                        byte[] buf = new byte[1024];
+                        int len;
+                        while ((len = in.read(buf)) > 0) {
+                            out.write(buf, 0, len);
+                        }
+                    } catch (Exception ex1) {
+                        Log.e("Pic2Download", ex1.getMessage());
+                        ex1.printStackTrace();
                     }
-                }catch(Exception ex1){
-                    Log.e("Pic2Download",ex1.getMessage());
+                } catch (Exception ex1) {
+                    Log.e("Pic2Download", ex1.getMessage());
                     ex1.printStackTrace();
                 }
-            }catch(Exception ex1){
-                Log.e("Pic2Download",ex1.getMessage());
-                ex1.printStackTrace();
             }
         }
+        // Save Child In Database
+        Child child=new Child(etName.getText().toString().trim());
+        child.setImgName(m_ModeId+".jpg");
+        ChildrenList clist=ChildrenList.getInstance();
+        clist.LoadData();
+        clist.Add(child);
+        clist.SaveData();
     }
 }
