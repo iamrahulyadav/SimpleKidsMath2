@@ -4,6 +4,8 @@ import android.Manifest;
 import android.app.Instrumentation;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -19,6 +21,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+
+import java.io.File;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -31,9 +36,7 @@ public class MainActivity extends AppCompatActivity
 
     protected ChildrenList m_clist;
 
-
     public static final  int ADD_CHILD_REQUEST=1;
-    private ChildrenList childrenList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +53,9 @@ public class MainActivity extends AppCompatActivity
                         .setAction("Action", null).show();
             }
         });
+        m_clist=ChildrenList.getInstance();
+        m_clist.setContext(this);
+        m_clist.LoadData();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -59,32 +65,18 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        // Create Children List
-        childrenList = ChildrenList.getInstance();
-
         Menu menu = navigationView.getMenu();
         menu.add(R.id.referrer_group, 121, Menu.NONE, "Add Child");
-
-        // Add Childrens (up to 5)
-        int j=122;
-        m_clist=ChildrenList.getInstance();
-        m_clist.LoadData();
-
-        Child[] children=m_clist.getChildrenArray();
-        if (children!=null)
-        {
-            for(int i=0;((i<children.length)&&(i<4));i++){
-                menu.add(R.id.referrer_group, j, Menu.NONE, children[i].getName());
-                j++;
-            }
+        SetCustomMenu();
+        // Select Current Child
+        Child child=m_clist.GetSelectedChild();
+        if (child!=null){
+            SwitchChild(child);
         }
-
        /*
         menu.add(R.id.referrer_group, 124, Menu.NONE, "Child 2");
         menu.add(R.id.referrer_group, 125, Menu.NONE, "Child 3");
         */
-
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED &&
             ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
             ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED )
@@ -98,6 +90,40 @@ public class MainActivity extends AppCompatActivity
             return;
         }
     }
+    protected void SetCustomMenu(){
+        // Create Children List
+
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        Menu menu = navigationView.getMenu();
+        m_clist=ChildrenList.getInstance();
+        m_clist.setContext(this);
+
+        if(m_clist.GetItemsSize()<=0)
+        {
+            //Bail out ->NO Items
+            return;
+        }
+        Integer startCustomMenu=m_clist.GetMinMenuId();
+        Integer endCustomMenu=m_clist.GetMaxMenuId();
+
+        // Remove OLD Menus:
+        for(int i=startCustomMenu;i<=endCustomMenu;i++) {
+            menu.removeItem(i);
+        }
+        // Add Childrens (up to 5)
+        int j=startCustomMenu;
+
+        Child[] children=m_clist.getChildrenArray();
+        if (children!=null)
+        {
+            for(int i=0;((i<children.length)&&(i<4));i++){
+                j++;
+                menu.add(R.id.referrer_group, children[i].getMenuId(), Menu.NONE, children[i].getName());
+            }
+        }
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -164,18 +190,22 @@ public class MainActivity extends AppCompatActivity
             foo.putExtra(CHILD_MODE_ID,0);
             startActivityForResult(foo, ADD_CHILD_REQUEST);
 
-        } else if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
 
+        } else {
+            Integer startCustomMenu=m_clist.GetMinMenuId();
+            Integer endCustomMenu=m_clist.GetMaxMenuId();
+
+            Child child=m_clist.GetChildByMenuId(id);
+            if (child!=null)
+            {
+                // Switch Child
+                SwitchChild(child);
+            }
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -183,10 +213,24 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    protected void SwitchChild(Child child) {
+        ImageView iv=(ImageView) findViewById(R.id.imageView);
+        File root = new File(getApplicationInfo().dataDir + File.separator + "pics" + File.separator);
+        File sdImageMainDirectory = new File(root + File.separator+child.getImgName());
+
+        if (sdImageMainDirectory.exists()){
+            Bitmap myBitmap = BitmapFactory.decodeFile(sdImageMainDirectory.getAbsolutePath());
+            iv.setImageBitmap(myBitmap);
+        }
+        m_clist = ChildrenList.getInstance();
+        m_clist.setContext(this);
+        m_clist.SetSelectedChild(child);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
        if (requestCode == ADD_CHILD_REQUEST) {
-
+           SetCustomMenu();
        }
     }
 }

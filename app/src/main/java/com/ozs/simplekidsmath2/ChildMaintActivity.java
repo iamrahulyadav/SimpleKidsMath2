@@ -45,7 +45,7 @@ public class ChildMaintActivity extends AppCompatActivity {
     String       m_ModeId;
     Boolean      m_flagClickSelect=false;
     EditText     etName;
-    ChildrenList childList;
+    ChildrenList m_clist;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +53,6 @@ public class ChildMaintActivity extends AppCompatActivity {
         setContentView(R.layout.activity_child_maint);
 
         etName= (EditText) findViewById(R.id.editTextName);
-
 
         if (savedInstanceState!=null)
         {
@@ -86,10 +85,10 @@ public class ChildMaintActivity extends AppCompatActivity {
                 String randomUUIDString = uuid.toString();
                 m_ModeId = randomUUIDString;
             }
-
         }
 
-
+        m_clist=ChildrenList.getInstance();
+        m_clist.setContext(this);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
@@ -196,8 +195,8 @@ public class ChildMaintActivity extends AppCompatActivity {
 
     private void UpdateUIFromPreferences()
     {
-        childList=ChildrenList.getInstance();
-        childList.setContext(this);
+        m_clist=ChildrenList.getInstance();
+        m_clist.setContext(this);
     }
 
     private void SavePreferences(Boolean IsFinish)
@@ -302,9 +301,8 @@ public class ChildMaintActivity extends AppCompatActivity {
         // Save Child In Database
         Child child=new Child(etName.getText().toString().trim());
         child.setImgName(m_ModeId+".jpg");
-        ChildrenList clist=ChildrenList.getInstance();
-        clist.LoadData();
-        clist.Add(child);
-        clist.SaveData();
+        m_clist=ChildrenList.getInstance();
+        m_clist.setContext(this);
+        m_clist.Add(child);
     }
 }

@@ -10,11 +10,12 @@ import java.util.UUID;
 
 public class Child {
 
-    private String childId;
-    private long   createdate;
-    private long   updatedate;
-    private String name;
-    private String imgName;
+    private String   childId;
+    private long     createdate;
+    private long     updatedate;
+    private String   name;
+    private String   imgName;
+    private Integer  menuId;
 
     public Child(String name) {
         UUID uuid = UUID.randomUUID();
@@ -23,6 +24,17 @@ public class Child {
         this.setName(name);
         this.createdate =new Date().getTime();
         this.updatedate = this.createdate;
+        this.menuId=0;
+    }
+    public String getChildId() {
+        return childId;
+    }
+
+    public Integer getMenuId() {
+        return menuId;
+    }
+    public void setMenuId(Integer menuId) {
+        this.menuId = menuId;
     }
     private void setUpdateDatex() {
         this.updatedate =new Date().getTime();
@@ -72,4 +84,5 @@ public class Child {
     {
         return this.getName();
     }
+
 }
