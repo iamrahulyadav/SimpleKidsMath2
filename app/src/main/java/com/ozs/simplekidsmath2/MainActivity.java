@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.view.Gravity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -22,6 +23,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.io.File;
 
@@ -68,11 +70,7 @@ public class MainActivity extends AppCompatActivity
         Menu menu = navigationView.getMenu();
         menu.add(R.id.referrer_group, 121, Menu.NONE, "Add Child");
         SetCustomMenu();
-        // Select Current Child
-        Child child=m_clist.GetSelectedChild();
-        if (child!=null){
-            SwitchChild(child);
-        }
+
        /*
         menu.add(R.id.referrer_group, 124, Menu.NONE, "Child 2");
         menu.add(R.id.referrer_group, 125, Menu.NONE, "Child 3");
@@ -90,6 +88,24 @@ public class MainActivity extends AppCompatActivity
             return;
         }
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+
+        // Select Current Child
+        Child child=m_clist.getSelectedChild();
+        if (child!=null){
+            SwitchChild(child);
+        }
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+    }
+
     protected void SetCustomMenu(){
         // Create Children List
 
@@ -127,7 +143,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions, @NonNull int[] grantResults) {
-
         if (requestCode==11)
         {
             if (grantResults.length > 0
@@ -214,17 +229,28 @@ public class MainActivity extends AppCompatActivity
     }
 
     protected void SwitchChild(Child child) {
-        ImageView iv=(ImageView) findViewById(R.id.imageView);
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        View hView =  navigationView.getHeaderView(0);
+        TextView nav_user = hView.findViewById(R.id.userName);
+        nav_user.setText(child.getName());
+        ImageView iv= hView.findViewById(R.id.imageView);
+
+        if (iv==null) {
+            return;
+        }
         File root = new File(getApplicationInfo().dataDir + File.separator + "pics" + File.separator);
         File sdImageMainDirectory = new File(root + File.separator+child.getImgName());
 
         if (sdImageMainDirectory.exists()){
             Bitmap myBitmap = BitmapFactory.decodeFile(sdImageMainDirectory.getAbsolutePath());
-            iv.setImageBitmap(myBitmap);
+            if (myBitmap!=null) {
+                iv.setImageBitmap(myBitmap);
+            }
         }
         m_clist = ChildrenList.getInstance();
         m_clist.setContext(this);
-        m_clist.SetSelectedChild(child);
+        m_clist.setSelectedChild(child);
     }
 
     @Override

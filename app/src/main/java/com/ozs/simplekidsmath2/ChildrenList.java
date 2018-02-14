@@ -14,10 +14,13 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -30,15 +33,14 @@ import android.os.Environment;
  */
 public class ChildrenList {
 
+    private static ChildrenList instance = null;
+    private static ArrayList<Child> childArrayList;
     private XmlPullParserFactory xmlPullParserFactory;
     static String  filename = "mydata.xml";
     static FileOutputStream outputStream;
-    static String newline = "\r\n";
-
     private Context myContext;
-    private static ChildrenList instance = null;
-    private static ArrayList<Child> childArrayList;
     private Integer startMenuId=122;
+    private String m_selectedChildUUID="";
 
     public static ChildrenList getInstance()
     {
@@ -86,6 +88,9 @@ public class ChildrenList {
             doc.appendChild(rootElement);
 
             // Childrens elements
+            Element selectedChildUUID = doc.createElement("SelectedChildUUID");
+            selectedChildUUID.appendChild(doc.createTextNode(m_selectedChildUUID));
+            rootElement.appendChild(selectedChildUUID);
             Element childrensx = doc.createElement("Childrens");
             rootElement.appendChild(childrensx);
 
@@ -93,15 +98,18 @@ public class ChildrenList {
                 Child child = childArrayList.get(i);
 
                 Element childx = doc.createElement("Child");
+                Element childidx=doc.createElement("ChildId");
                 Element namex = doc.createElement("Name");
                 Element imgnamex = doc.createElement("ImgName");
                 Element createdatex = doc.createElement("CreateDate");
                 Element updatedatex = doc.createElement("UpdateDate");
 
+                childidx.appendChild(doc.createTextNode(child.getChildId()));
                 namex.appendChild(doc.createTextNode(child.getName()));
                 imgnamex.appendChild(doc.createTextNode(child.getImgName()));
                 createdatex.appendChild(doc.createTextNode(child.getCreateDate().toString()));
                 updatedatex.appendChild(doc.createTextNode(child.getUpdateDate().toString()));
+                childx.appendChild(childidx);
                 childx.appendChild(namex);
                 childx.appendChild(imgnamex);
                 childx.appendChild(createdatex);
@@ -112,6 +120,8 @@ public class ChildrenList {
 
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
             DOMSource source = new DOMSource(doc);
             String newFileName = myContext.getApplicationInfo().dataDir+"/" + filename;
             StreamResult result = new StreamResult(new File(newFileName));
@@ -178,6 +188,18 @@ public class ChildrenList {
             //read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
             //doc.getDocumentElement().normalize();
 
+            // Get Selected Child UUID
+            NodeList nListSE=doc.getDocumentElement().getElementsByTagName("SelectedChildUUID");
+            if (nListSE.getLength()==1)
+            {
+                Node node=nListSE.item(0);
+                if (node.getNodeType() == Node.ELEMENT_NODE) {
+                }
+                        Element eSelectedChildUUID = (Element) nListSE.item(0);
+                        m_selectedChildUUID = eSelectedChildUUID.getTextContent();
+                }
+
+            // Get ALL Childrens
             NodeList nList = doc.getDocumentElement().getElementsByTagName("Childrens");
             if (nList.getLength()==1)
             {
@@ -195,13 +217,14 @@ public class ChildrenList {
                         if (nChild.getNodeType() == Node.ELEMENT_NODE) {
                             Element eChild = (Element) nListC.item(i);
                             // Parse Child Data
-
+                            String childid=eChild.getElementsByTagName("ChildId").item(0).getTextContent();
                             String name=eChild.getElementsByTagName("Name").item(0).getTextContent();
                             String imgName=eChild.getElementsByTagName("ImgName").item(0).getTextContent();
                             String createDate=eChild.getElementsByTagName("CreateDate").item(0).getTextContent();
                             String updateDate=eChild.getElementsByTagName("UpdateDate").item(0).getTextContent();
 
-                            Child child=new Child(name);
+                            Child child=new Child(childid,name);
+
                             child.setImgName(imgName);
                             Long lcreateDate=Long.parseLong(createDate);
                             child.setCreateDate(lcreateDate);
@@ -277,26 +300,53 @@ public class ChildrenList {
     }
 
     public Child GetChildByChildId(String childId){
-        for(int i=0;i<childArrayList.size();i++){
-            Child child=childArrayList.get(i);
-            if (child.getChildId()==childId) {
-                return child;
+
+            String childId1 = childId.toLowerCase().trim().replaceAll("[\\p{Cc}\\p{Cf}\\p{Co}\\p{Cn}]", "?");
+            byte[] a = childId1.getBytes(StandardCharsets.UTF_16); // Java 7+ only
+
+            for (int i = 0; i < childArrayList.size(); i++) {
+                Child child = childArrayList.get(i);
+                String childId2 = child.getChildId().toLowerCase().trim().replaceAll("[\\p{Cc}\\p{Cf}\\p{Co}\\p{Cn}]", "?");
+                byte[] b = childId1.getBytes(StandardCharsets.UTF_16); // Java 7+ only
+                boolean bIdentical=true;
+                if (a.length!=b.length){
+                    continue;
+                }
+                for(int j=0;j<a.length;j++){
+                    if (a[j]!=b[j]){
+                        bIdentical=false;
+                        break;
+                    }
+                }
+                if (!bIdentical)
+                {
+                    continue;
+                }
+                else{ // Match Found
+                    return child;
+                }
             }
+            return null;
+
+    }
+
+
+    public void setSelectedChild(Child child){
+        setSelectedChildUUID(child.getChildId());
+    }
+
+    public Child getSelectedChild(){
+        return GetChildByChildId(getSelectedChildUUID());
+    }
+
+    public String getSelectedChildUUID() {
+        return m_selectedChildUUID;
+    }
+
+    public void setSelectedChildUUID(String m_selectedChild) {
+        if (!m_selectedChild.equals(this.m_selectedChildUUID)) {
+            this.m_selectedChildUUID = m_selectedChild;
+            SaveData();
         }
-        return null;
-    }
-
-
-    public void SetSelectedChild(Child child){
-        SharedPreferences sp=myContext.getSharedPreferences("com.ozs.simplekidsmath2.selectedchild",Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putString("CurrentChild",child.getChildId());
-        editor.commit();
-    }
-
-    public Child GetSelectedChild(){
-        SharedPreferences sp=myContext.getSharedPreferences("com.ozs.simplekidsmath2.selectedchild",Context.MODE_PRIVATE);
-        String uuid=sp.getString("CurrentChild","");
-        return GetChildByChildId(uuid);
     }
 }

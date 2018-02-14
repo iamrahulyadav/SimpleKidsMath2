@@ -22,10 +22,21 @@ public class Child {
         String randomUUIDString = uuid.toString();
         this.childId = randomUUIDString;
         this.setName(name);
+        Init();
+    }
+    public Child(String uuid,String name) {
+        this.childId = uuid;
+        this.setName(name);
+        Init();
+    }
+
+    protected void Init()
+    {
         this.createdate =new Date().getTime();
         this.updatedate = this.createdate;
         this.menuId=0;
     }
+
     public String getChildId() {
         return childId;
     }
