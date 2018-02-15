@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity
     protected ChildrenList m_clist;
 
     public static final  int ADD_CHILD_REQUEST=1;
+    public static final  int OPTION_REQUEST=2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -206,6 +207,8 @@ public class MainActivity extends AppCompatActivity
             startActivityForResult(foo, ADD_CHILD_REQUEST);
 
         } else if (id == R.id.nav_manage) {
+            Intent foo=new Intent(MainActivity.this,OptionsActivity.class);
+            startActivityForResult(foo, OPTION_REQUEST);
 
         } else if (id == R.id.nav_share) {
 

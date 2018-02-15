@@ -16,6 +16,26 @@ public class Child {
     private String   name;
     private String   imgName;
     private Integer  menuId;
+    private Integer  minparam=1;
+    private Integer  maxparam=20;
+    private Integer  addNo=0;
+    private Integer  subNo=0;
+    private Integer  multNo=0;
+    private Integer  divNo=0;
+    private Long     addTime=0L;
+    private Long     subTime=0L;
+    private Long     multTime=0L;
+    private Long     divTime=0L;
+    private Integer  addG=0;
+    private Integer  subG=0;
+    private Integer  multG=0;
+    private Integer  divG=0;
+    private Boolean  isAdd=true;
+    private Boolean  isSub=true;
+    private Boolean  isMult=true;
+    private Boolean  isDiv=true;
+
+
 
     public Child(String name) {
         UUID uuid = UUID.randomUUID();
@@ -96,4 +116,147 @@ public class Child {
         return this.getName();
     }
 
+    public Integer getMinparam() {
+        return minparam;
+    }
+
+    public void setMinparam(Integer minparam) {
+        this.minparam = minparam;
+    }
+
+    public Integer getMaxparam() {
+        return maxparam;
+    }
+
+    public void setMaxparam(Integer maxparam) {
+        this.maxparam = maxparam;
+    }
+
+    public Integer getAddNo() {
+        return addNo;
+    }
+
+    public void setAddNo(Integer addNo) {
+        this.addNo = addNo;
+    }
+
+    public Integer getSubNo() {
+        return subNo;
+    }
+
+    public void setSubNo(Integer subNo) {
+        this.subNo = subNo;
+    }
+
+    public Integer getMultNo() {
+        return multNo;
+    }
+
+    public void setMultNo(Integer multNo) {
+        this.multNo = multNo;
+    }
+
+    public Integer getDivNo() {
+        return divNo;
+    }
+
+    public void setDivNo(Integer divNo) {
+        this.divNo = divNo;
+    }
+
+    public Long getAddTime() {
+        return addTime;
+    }
+
+    public void setAddTime(Long addTime) {
+        this.addTime = addTime;
+    }
+
+    public Long getSubTime() {
+        return subTime;
+    }
+
+    public void setSubTime(Long subTime) {
+        this.subTime = subTime;
+    }
+
+    public Long getMultTime() {
+        return multTime;
+    }
+
+    public void setMultTime(Long multTime) {
+        this.multTime = multTime;
+    }
+
+    public Long getDivTime() {
+        return divTime;
+    }
+
+    public void setDivTime(Long divTime) {
+        this.divTime = divTime;
+    }
+
+    public Integer getAddG() {
+        return addG;
+    }
+
+    public void setAddG(Integer addG) {
+        this.addG = addG;
+    }
+
+    public Integer getSubG() {
+        return subG;
+    }
+
+    public void setSubG(Integer subG) {
+        this.subG = subG;
+    }
+
+    public Integer getMultG() {
+        return multG;
+    }
+
+    public void setMultG(Integer multG) {
+        this.multG = multG;
+    }
+
+    public Integer getDivG() {
+        return divG;
+    }
+
+    public void setDivG(Integer divG) {
+        this.divG = divG;
+    }
+
+    public Boolean getAdd() {
+        return isAdd;
+    }
+
+    public void setAdd(Boolean add) {
+        isAdd = add;
+    }
+
+    public Boolean getSub() {
+        return isSub;
+    }
+
+    public void setSub(Boolean sub) {
+        isSub = sub;
+    }
+
+    public Boolean getMult() {
+        return isMult;
+    }
+
+    public void setMult(Boolean mult) {
+        isMult = mult;
+    }
+
+    public Boolean getDiv() {
+        return isDiv;
+    }
+
+    public void setDiv(Boolean div) {
+        isDiv = div;
+    }
 }

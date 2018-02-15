@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SimpleKidsMath2</string>
+    <string name="app_name">Simple Kids Math</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -10,4 +10,15 @@
     <string name="result_image_desc">crop result</string>
     <string name="main_button_select_image">Select Image</string>
     <string name="main_activity_desciption">Sample activity to start image cropping.\nExample: User profile activity to select avatar.</string>
+
+    <string name="lbl_min_value">Min:</string>
+    <string name="lbl_max_value">Max:</string>
+    <string name="hint_min_value">Min Value</string>
+    <string name="hint_max_value">Max Value</string>
+
+    <string name="lbl_add">Addition</string>
+    <string name="lbl_sub">Subtraction</string>
+    <string name="lbl_mult">Multiplicaton</string>
+    <string name="lbl_div">Deviation</string>
+
 </resources>

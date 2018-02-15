@@ -104,16 +104,88 @@ public class ChildrenList {
                 Element createdatex = doc.createElement("CreateDate");
                 Element updatedatex = doc.createElement("UpdateDate");
 
+                Element minparamx = doc.createElement("minParam");
+                Element maxparamx=doc.createElement("maxParam");
+
+                Element addNox = doc.createElement("addNo");
+                Element subNox=doc.createElement("subNo");
+                Element multNox = doc.createElement("multNo");
+                Element divNox = doc.createElement("divNo");
+
+                Element addTimex = doc.createElement("addTime");
+                Element subTimex=doc.createElement("subTime");
+                Element multTimex = doc.createElement("multTime");
+                Element divTimex = doc.createElement("divTime");
+
+                Element addGx = doc.createElement("addG");
+                Element subGx=doc.createElement("subG");
+                Element multGx = doc.createElement("multG");
+                Element divGx = doc.createElement("divG");
+
+                Element isAddx = doc.createElement("isAdd");
+                Element isSubx=doc.createElement("isSub");
+                Element isMultx = doc.createElement("isMult");
+                Element isDivx = doc.createElement("isDiv");
+
+
+
+                minparamx.appendChild(doc.createTextNode(child.getMinparam().toString()));
+                maxparamx.appendChild(doc.createTextNode(child.getMaxparam().toString()));
+
                 childidx.appendChild(doc.createTextNode(child.getChildId()));
                 namex.appendChild(doc.createTextNode(child.getName()));
                 imgnamex.appendChild(doc.createTextNode(child.getImgName()));
                 createdatex.appendChild(doc.createTextNode(child.getCreateDate().toString()));
                 updatedatex.appendChild(doc.createTextNode(child.getUpdateDate().toString()));
+
+                addNox.appendChild(doc.createTextNode(child.getAddNo().toString()));
+                subNox.appendChild(doc.createTextNode(child.getSubNo().toString()));
+                multNox.appendChild(doc.createTextNode(child.getMultNo().toString()));
+                divNox.appendChild(doc.createTextNode(child.getDivNo().toString()));
+
+                addTimex.appendChild(doc.createTextNode(child.getAddTime().toString()));
+                subTimex.appendChild(doc.createTextNode(child.getSubTime().toString()));
+                multTimex.appendChild(doc.createTextNode(child.getMultTime().toString()));
+                divTimex.appendChild(doc.createTextNode(child.getDivTime().toString()));
+
+                addGx.appendChild(doc.createTextNode(child.getAddG().toString()));
+                subGx.appendChild(doc.createTextNode(child.getSubG().toString()));
+                multGx.appendChild(doc.createTextNode(child.getMultG().toString()));
+                divGx.appendChild(doc.createTextNode(child.getDivG().toString()));
+
+                isAddx.appendChild(doc.createTextNode(child.getAdd() ? "1":"0"));
+                isSubx.appendChild(doc.createTextNode(child.getSub() ? "1":"0"));
+                isMultx.appendChild(doc.createTextNode(child.getMult() ? "1":"0"));
+                isDivx.appendChild(doc.createTextNode(child.getDiv() ? "1":"0"));
+
                 childx.appendChild(childidx);
                 childx.appendChild(namex);
                 childx.appendChild(imgnamex);
                 childx.appendChild(createdatex);
                 childx.appendChild(updatedatex);
+
+                childx.appendChild(minparamx);
+                childx.appendChild(maxparamx);
+
+                childx.appendChild(addNox);
+                childx.appendChild(subNox);
+                childx.appendChild(multNox);
+                childx.appendChild(divNox);
+
+                childx.appendChild(addTimex);
+                childx.appendChild(subTimex);
+                childx.appendChild(multTimex);
+                childx.appendChild(divTimex);
+
+                childx.appendChild(addGx);
+                childx.appendChild(subGx);
+                childx.appendChild(multGx);
+                childx.appendChild(divGx);
+
+                childx.appendChild(isAddx);
+                childx.appendChild(isSubx);
+                childx.appendChild(isMultx);
+                childx.appendChild(isDivx);
 
                 childrensx.appendChild(childx);
             }
@@ -223,6 +295,31 @@ public class ChildrenList {
                             String createDate=eChild.getElementsByTagName("CreateDate").item(0).getTextContent();
                             String updateDate=eChild.getElementsByTagName("UpdateDate").item(0).getTextContent();
 
+                            String minparam=eChild.getElementsByTagName("minParam").item(0).getTextContent();
+                            String maxparam=eChild.getElementsByTagName("maxParam").item(0).getTextContent();
+
+
+                            String addNo=eChild.getElementsByTagName("addNo").item(0).getTextContent();
+                            String subNo=eChild.getElementsByTagName("subNo").item(0).getTextContent();
+                            String multNo=eChild.getElementsByTagName("multNo").item(0).getTextContent();
+                            String divNo=eChild.getElementsByTagName("divNo").item(0).getTextContent();
+
+                            String addTime=eChild.getElementsByTagName("addTime").item(0).getTextContent();
+                            String subTime=eChild.getElementsByTagName("subTime").item(0).getTextContent();
+                            String multTime=eChild.getElementsByTagName("multTime").item(0).getTextContent();
+                            String divTime=eChild.getElementsByTagName("divTime").item(0).getTextContent();
+
+                            String addG=eChild.getElementsByTagName("addG").item(0).getTextContent();
+                            String subG=eChild.getElementsByTagName("subG").item(0).getTextContent();
+                            String multG=eChild.getElementsByTagName("multG").item(0).getTextContent();
+                            String divG=eChild.getElementsByTagName("divG").item(0).getTextContent();
+
+                            String isAdd=eChild.getElementsByTagName("isAdd").item(0).getTextContent();
+                            String isSub=eChild.getElementsByTagName("isSub").item(0).getTextContent();
+                            String isMult=eChild.getElementsByTagName("isMult").item(0).getTextContent();
+                            String isDiv=eChild.getElementsByTagName("isDiv").item(0).getTextContent();
+
+
                             Child child=new Child(childid,name);
 
                             child.setImgName(imgName);
@@ -230,6 +327,29 @@ public class ChildrenList {
                             child.setCreateDate(lcreateDate);
                             Long lupdateDate=Long.parseLong(updateDate);
                             child.setCreateDate(lupdateDate);
+
+                            child.setMinparam(Integer.parseInt(minparam));
+                            child.setMaxparam(Integer.parseInt(maxparam));
+
+                            child.setAddNo(Integer.parseInt(addNo));
+                            child.setSubNo(Integer.parseInt(subNo));
+                            child.setMultNo(Integer.parseInt(multNo));
+                            child.setDivNo(Integer.parseInt(divNo));
+
+                            child.setAddTime(Long.parseLong(addTime));
+                            child.setSubTime(Long.parseLong(subTime));
+                            child.setMultTime(Long.parseLong(multTime));
+                            child.setDivTime(Long.parseLong(divTime));
+
+                            child.setAddG(Integer.parseInt(addG));
+                            child.setSubG(Integer.parseInt(subG));
+                            child.setMultG(Integer.parseInt(multG));
+                            child.setDivG(Integer.parseInt(divG));
+
+                            child.setAdd(Integer.parseInt(isAdd)==1);
+                            child.setSub(Integer.parseInt(isSub)==1);
+                            child.setMult(Integer.parseInt(isMult)==1);
+                            child.setDiv(Integer.parseInt(isDiv)==1);
 
                             this.Add(child,false);
                             // childArrayList.add(child);
