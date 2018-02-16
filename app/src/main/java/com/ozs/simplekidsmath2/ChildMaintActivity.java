@@ -278,7 +278,7 @@ public class ChildMaintActivity extends AppCompatActivity {
             File root = new File(getApplicationInfo().dataDir + File.separator + "pics" + File.separator);
             File sdImageMainDirectory = new File(root, m_ModeId + ".jpg");
             File dst = new File(rootDownload, m_ModeId + ".jpg");
-            if (sdImageMainDirectory.exists()) {
+                   if (sdImageMainDirectory.exists()) {
                 // Copy the file
                 try (InputStream in = new FileInputStream(sdImageMainDirectory)) {
                     try (OutputStream out = new FileOutputStream(dst)) {
