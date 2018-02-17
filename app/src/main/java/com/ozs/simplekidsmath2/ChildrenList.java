@@ -12,6 +12,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
@@ -33,6 +34,7 @@ import android.os.Environment;
  */
 public class ChildrenList {
 
+    public final static String DEFAULT_CHILD= "0e4c99e6-401f-4300-bb23-d1dd6246796a";
     private static ChildrenList instance = null;
     private static ArrayList<Child> childArrayList;
     private XmlPullParserFactory xmlPullParserFactory;
@@ -251,6 +253,14 @@ public class ChildrenList {
             File fXmlFile = new File(newFileName);
             if (!fXmlFile.exists()){
                 // No Data File
+                // Insert default Child
+                Child childx=new Child(DEFAULT_CHILD,"Child");
+                this.Add(childx,false);
+                CopyDefaultImage();
+                childx.setImgName(DEFAULT_CHILD+".jpg");
+                // Set the current child
+                setSelectedChild(childx);
+                SaveData();
                 return;
             }
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -355,12 +365,60 @@ public class ChildrenList {
                             // childArrayList.add(child);
                         }
                     }
+                    if (childArrayList.size()==0)
+                    {
+                        Child childx=new Child(DEFAULT_CHILD,"Child");
+                        this.Add(childx,false);
+                        CopyDefaultImage();
+                        childx.setImgName(DEFAULT_CHILD+".jpg");
+                        // Set the current child
+                        setSelectedChild(childx);
+                    }
                     this.SaveData();
+                    // Check to see if there are children at all
                 }
             }
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public void CopyDefaultImage(){
+
+        try {
+
+            // Ensure that pics directory exists
+            File rootPics = new File(myContext.getApplicationInfo().dataDir+File.separator+"pics");
+            File rootDownload = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+            if (!rootPics.exists())
+            {
+                rootPics.mkdirs();
+            }
+            File root = new File(myContext.getApplicationInfo().dataDir + File.separator + "pics" + File.separator);
+            File sdImageMainDirectory = new File(root, DEFAULT_CHILD+".jpg");
+            if (sdImageMainDirectory.exists()) {
+                // Bail out if image already exists
+                return;
+            }
+
+            InputStream in = myContext.getResources().openRawResource(R.raw.little_boy_grey2);
+            FileOutputStream out = new FileOutputStream(sdImageMainDirectory);
+            byte[] buff = new byte[1024];
+            int read = 0;
+
+            try {
+                while ((read = in.read(buff)) > 0) {
+                    out.write(buff, 0, read);
+                }
+            } finally {
+                in.close();
+                out.close();
+            }
+        }
+        catch(IOException ex1)
+        {
+            ex1.printStackTrace();
         }
     }
 

@@ -94,10 +94,7 @@ public class MainActivity extends AppCompatActivity
         menu.add(R.id.referrer_group, 121, Menu.NONE, "Add Child");
         SetCustomMenu();
 
-       /*
-        menu.add(R.id.referrer_group, 124, Menu.NONE, "Child 2");
-        menu.add(R.id.referrer_group, 125, Menu.NONE, "Child 3");
-        */
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED &&
             ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
             ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED )
@@ -203,8 +200,21 @@ public class MainActivity extends AppCompatActivity
 
     public void InitRound()
     {
+        m_clist.setContext(this);
+        Child child = m_clist.getSelectedChild();
+        if (child==null){
+            child = new Child("dummy");
+        }
+
         iv.setVisibility(View.INVISIBLE);
         Random r = new Random(new Date().getTime());
+
+        Integer n1start=child.getMinparam();
+        Integer n1end=child.getMaxparam();
+        // Normalize the result
+        if (n1start<0){
+
+        }
 
         Integer n1=r.nextInt(10);;
         Integer n2=r.nextInt(10);;
