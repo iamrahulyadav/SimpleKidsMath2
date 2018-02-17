@@ -8,8 +8,11 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 public class OptionsActivity extends AppCompatActivity {
 
@@ -30,6 +33,9 @@ public class OptionsActivity extends AppCompatActivity {
     CheckBox cbMultOp;
     CheckBox cbDivOp;
 
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,8 +49,6 @@ public class OptionsActivity extends AppCompatActivity {
         FindViews();
         UpdateUIFromPreferences();
 
-
-
     }
 
     protected void FindViews()
@@ -56,6 +60,8 @@ public class OptionsActivity extends AppCompatActivity {
         cbSubOp=findViewById(R.id.checkBoxSub);
         cbMultOp=findViewById(R.id.checkBoxMult);
         cbDivOp=findViewById(R.id.checkBoxDiv);
+
+
     }
 
     @Override

@@ -1,10 +1,25 @@
 {
     "logs": [
         {
-            "outputFile": "C:\\Users\\z_savion\\AndroidStudioProjects\\SimpleKidsMath2\\cropper\\build\\intermediates\\incremental\\mergeDebugAndroidTestResources\\merged.dir\\values-land\\values-land.xml",
+            "outputFile": "/Users/itzhaksavion/AndroidstudioProjects/SimpleKidsMath2/cropper/build/intermediates/incremental/mergeDebugAndroidTestResources/merged.dir/values-land/values-land.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\z_savion\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.0.2.aar\\88cd8a954687083d905d8b341ec60d3e\\res\\values-land\\values-land.xml",
+                    "source": "/Users/itzhaksavion/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.0.2.aar/9b56aaea7068ebc787df39e08f1fa900/res/values-land/values-land.xml",
+                    "from": {
+                        "startLines": "2,3,4,5",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "55,125,189,260",
+                        "endColumns": "69,63,70,67",
+                        "endOffsets": "120,184,255,323"
+                    }
+                }
+            ]
+        },
+        {
+            "outputFile": "/Users/itzhaksavion/AndroidstudioProjects/SimpleKidsMath2/C:\\Users\\z_savion\\AndroidStudioProjects\\SimpleKidsMath2\\cropper\\build\\intermediates\\incremental\\mergeDebugAndroidTestResources\\merged.dir\\values-land\\values-land.xml",
+            "map": [
+                {
+                    "source": "/Users/itzhaksavion/AndroidstudioProjects/SimpleKidsMath2/C:\\Users\\z_savion\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.0.2.aar\\88cd8a954687083d905d8b341ec60d3e\\res\\values-land\\values-land.xml",
                     "from": {
                         "startLines": "2,3,4,5",
                         "startColumns": "4,4,4,4",

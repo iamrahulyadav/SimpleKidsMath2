@@ -2,16 +2,20 @@ package com.ozs.simplekidsmath2;
 
 import android.Manifest;
 import android.app.Instrumentation;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -22,10 +26,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.File;
+import java.util.Date;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -40,6 +49,19 @@ public class MainActivity extends AppCompatActivity
 
     public static final  int ADD_CHILD_REQUEST=1;
     public static final  int OPTION_REQUEST=2;
+
+
+    public static final int MAX_NUM=20;
+    public static final String FIRST_PARAM="firstp";
+    public static final String SECOND_PARAM="secondp";
+    public static final String OPERATOR_PARAM="+";
+
+
+    ImageView iv;
+    TextView tv1;
+    TextView tv2;
+    TextView tvop;
+    EditText etResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +110,125 @@ public class MainActivity extends AppCompatActivity
                     11);
             return;
         }
+
+
+        FindViews();
+
+        if (savedInstanceState!=null)
+        {
+            tv1.setText(savedInstanceState.getString(FIRST_PARAM,"0"));
+            tv2.setText(savedInstanceState.getString(SECOND_PARAM,"0"));
+            tvop.setText(savedInstanceState.getString(OPERATOR_PARAM,"+"));
+        }
+
+        ImageButton ibGen=(ImageButton) findViewById(R.id.imageButtonGen);
+        ibGen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                InitRound();
+            }
+        });
+
+
+        EditText etResult=(EditText) findViewById(R.id.editTextRes);
+        etResult.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                int n1=Integer.parseInt(tv1.getText().toString());
+                int n2=Integer.parseInt(tv2.getText().toString());
+                try {
+                    int n3 = Integer.parseInt(charSequence.toString());
+                    if (tvop.getText().toString()=="+")
+                    {
+                        if (n1 + n2 == n3) {
+
+                            View view = MainActivity.this.getCurrentFocus();
+                            if (view != null) {
+                                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                            }
+                            ImageView iv = (ImageView) findViewById(R.id.imageButtonGood);
+                            iv.setVisibility(View.VISIBLE);
+                        }
+
+                    }
+                    else
+                    {
+                        if (n1 - n2 == n3) {
+                            View view = MainActivity.this.getCurrentFocus();
+                            if (view != null) {
+                                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                            }
+                            ImageView iv = (ImageView) findViewById(R.id.imageButtonGood);
+                            iv.setVisibility(View.VISIBLE);
+                        }
+                    }
+
+                }
+                catch(Exception ex1)
+                {
+
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        InitRound();
+    }
+
+
+    protected void FindViews()
+    {
+        tv1=findViewById(R.id.textView1stArg);
+        tv2=findViewById(R.id.textView2ndArg);
+        tvop=findViewById(R.id.textViewSign);
+        etResult=findViewById(R.id.editTextRes);
+
+        iv=(ImageView) findViewById(R.id.imageButtonGood);
+        iv.setVisibility(View.INVISIBLE);
+        tvop.setText("+");
+
+    }
+
+
+    public void InitRound()
+    {
+        iv.setVisibility(View.INVISIBLE);
+        Random r = new Random(new Date().getTime());
+
+        Integer n1=r.nextInt(10);;
+        Integer n2=r.nextInt(10);;
+
+        if (new Date().getTime() % 2 ==0 )
+        {
+            tvop.setText("+");
+        }
+        else
+        {
+            tvop.setText("-");
+            if (n2 > n1)
+            {
+                int nt=n1;
+                n1=n2;
+                n2=nt;
+            }
+        }
+
+        tv1.setText(n1.toString());
+        tv2.setText(n2.toString());
+        etResult.setText("");
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(etResult, InputMethodManager.SHOW_IMPLICIT);
     }
 
     @Override
@@ -261,5 +402,23 @@ public class MainActivity extends AppCompatActivity
        if (requestCode == ADD_CHILD_REQUEST) {
            SetCustomMenu();
        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+
+        outState.putString(FIRST_PARAM,tv1.getText().toString());
+        outState.putString(SECOND_PARAM,tv1.getText().toString());
+        outState.putString(OPERATOR_PARAM,"+");
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        tv1.setText(savedInstanceState.getString(FIRST_PARAM,"0"));
+        tv2.setText(savedInstanceState.getString(SECOND_PARAM,"0"));
+        tvop.setText(savedInstanceState.getString(OPERATOR_PARAM,"+"));
+
+        super.onRestoreInstanceState(savedInstanceState);
     }
 }
