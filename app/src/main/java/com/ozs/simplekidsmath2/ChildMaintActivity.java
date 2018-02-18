@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -48,16 +49,15 @@ public class ChildMaintActivity extends AppCompatActivity {
     EditText     etName;
     ChildrenList m_clist;
     ChildrenListPresentor m_clistPresenter;
+    Button       btnDeleteChild;
+    ImageView    ivSelectedPic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_child_maint);
 
-        m_clistPresenter=new ChildrenListPresentor(this);
-        etName= (EditText) findViewById(R.id.editTextName);
-        m_clist=ChildrenList.getInstance();
-        m_clist.setContext(this);
+        FindViews();
 
         if (savedInstanceState!=null)
         {
@@ -84,11 +84,14 @@ public class ChildMaintActivity extends AppCompatActivity {
             m_Mode=bundle.getString(MainActivity.CHILD_MODE,MainActivity.CHILD_MODE_VALUE_ADD);
             m_ModeId=bundle.getString(MainActivity.CHILD_MODE_ID,"");
 
-            if (m_ModeId.trim().length()==0){
+            if ((m_ModeId.trim().length()==0) ||
+                (m_Mode.compareTo(MainActivity.CHILD_MODE_VALUE_ADD)==0)) {
                 // Create new Temporary guid
                 UUID uuid = UUID.randomUUID();
                 String randomUUIDString = uuid.toString();
                 m_ModeId = randomUUIDString;
+                // Insert default Pic
+                m_clistPresenter.CopyDefaultImageToIV(ivSelectedPic,randomUUIDString);
             }else {
                 Child currChild=m_clist.GetChildByChildId(m_ModeId);
                 if (currChild==null){
@@ -100,6 +103,14 @@ public class ChildMaintActivity extends AppCompatActivity {
                 m_clistPresenter.AssignImageToImageView(iv,currChild.getImgName());
             }
         }
+
+        if (m_Mode.compareTo(MainActivity.CHILD_MODE_VALUE_ADD)==0){
+            btnDeleteChild.setVisibility(View.INVISIBLE);
+        }
+        else {
+            btnDeleteChild.setVisibility(View.VISIBLE);
+        }
+
         // Ask for permissions
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
@@ -115,7 +126,15 @@ public class ChildMaintActivity extends AppCompatActivity {
             return;
         }
     }
+    protected void FindViews(){
 
+        ivSelectedPic=findViewById(R.id.quick_start_cropped_image);
+        btnDeleteChild=findViewById(R.id.btnDeleteChild);
+        m_clistPresenter=new ChildrenListPresentor(this);
+        etName= (EditText) findViewById(R.id.editTextName);
+        m_clist=ChildrenList.getInstance();
+        m_clist.setContext(this);
+    }
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -172,7 +191,10 @@ public class ChildMaintActivity extends AppCompatActivity {
                 return true;
             }
         }
-        return super.onKeyDown(keyCode, event);
+        SavePreferences(true);
+        finish();
+        return true;
+        // return super.onKeyDown(keyCode, event);
     }
 
     @Override
@@ -224,7 +246,9 @@ public class ChildMaintActivity extends AppCompatActivity {
                 .setCropMenuCropButtonIcon(R.mipmap.ic_launcher)
                 .start(this);
     }
+    public void onDeleteChildClick(View view){
 
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -250,16 +274,28 @@ public class ChildMaintActivity extends AppCompatActivity {
         m_clist.setContext(this);
 
         if (m_Mode.compareTo(MainActivity.CHILD_MODE_VALUE_ADD)==0) {
-            // Save Child In Database
-            Child child = new Child(etName.getText().toString().trim());
-            child.setImgName(m_ModeId + ".jpg");
-            m_clist.Add(child);
+            if (etName.getText().toString().length()>0) {
+                // Save Child In Database
+                Child child = new Child(m_ModeId,etName.getText().toString().trim());
+                child.setImgName(m_ModeId + ".jpg");
+                m_clist.Add(child);
+                m_clist.setSelectedChild(child);
+            }
+            else {
+                finish();
+            }
         }
         if (m_Mode.compareTo(MainActivity.CHILD_MODE_VALUE_CHG)==0) {
-            Child currChild=m_clist.GetChildByChildId(m_ModeId);
-            currChild.setName(etName.getText().toString().trim());
-            currChild.setImgName(m_ModeId + ".jpg");
-            m_clist.SaveData();
+
+            if (etName.getText().toString().length()>0) {
+                Child currChild = m_clist.GetChildByChildId(m_ModeId);
+                currChild.setName(etName.getText().toString().trim());
+                currChild.setImgName(m_ModeId + ".jpg");
+                m_clist.SaveData();
+            }
+            else{
+                finish();
+            }
         }
     }
 }

@@ -51,18 +51,15 @@ public class MainActivity extends AppCompatActivity
     public static final  int ADD_CHILD_REQUEST=1;
     public static final  int OPTION_REQUEST=2;
 
-
     public static final String FIRST_PARAM="firstp";
     public static final String SECOND_PARAM="secondp";
     public static final String OPERATOR_PARAM="+";
-
 
     ImageView iv;
     TextView tv1;
     TextView tv2;
     TextView tvop;
     EditText etResult;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,9 +77,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
         m_clistPresentor=new ChildrenListPresentor(this);
-        m_clist=ChildrenList.getInstance();
-        m_clist.setContext(this);
-        m_clist.LoadData();
+        CreateCList();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -181,6 +176,13 @@ public class MainActivity extends AppCompatActivity
         InitRound();
     }
 
+    protected void CreateCList(){
+        m_clist=ChildrenList.getInstance();
+        m_clist.setContext(this);
+        m_clist.LoadData();
+
+    }
+
     protected void FindViews()
     {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -271,8 +273,7 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         Menu menu = navigationView.getMenu();
-        m_clist=ChildrenList.getInstance();
-        m_clist.setContext(this);
+        CreateCList();
 
         if(m_clist.GetItemsSize()<=0)
         {
@@ -392,7 +393,6 @@ public class MainActivity extends AppCompatActivity
                 SwitchChild(child);
             }
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -411,15 +411,21 @@ public class MainActivity extends AppCompatActivity
         }
         m_clistPresentor.AssignImageToImageButton(ib,child.getImgName());
 
-        m_clist = ChildrenList.getInstance();
-        m_clist.setContext(this);
+        CreateCList();
         m_clist.setSelectedChild(child);
+        // Leave the drawer open
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
        if (requestCode == ADD_CHILD_REQUEST) {
+           CreateCList();
            SetCustomMenu();
+           // Select Current Child
+           Child child=m_clist.getSelectedChild();
+           if (child!=null){
+               SwitchChild(child);
+           }
        }
     }
 

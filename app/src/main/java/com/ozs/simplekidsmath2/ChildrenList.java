@@ -1,8 +1,6 @@
 package com.ozs.simplekidsmath2;
 
 import android.content.Context;
-
-import android.content.SharedPreferences;
 import android.util.Log;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -12,10 +10,8 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import javax.xml.parsers.DocumentBuilder;
@@ -132,8 +128,6 @@ public class ChildrenList {
                 Element isSubx=doc.createElement("isSub");
                 Element isMultx = doc.createElement("isMult");
                 Element isDivx = doc.createElement("isDiv");
-
-
 
                 minparamx.appendChild(doc.createTextNode(child.getMinparam().toString()));
                 maxparamx.appendChild(doc.createTextNode(child.getMaxparam().toString()));
@@ -278,10 +272,10 @@ public class ChildrenList {
             {
                 Node node=nListSE.item(0);
                 if (node.getNodeType() == Node.ELEMENT_NODE) {
+                    Element eSelectedChildUUID = (Element) nListSE.item(0);
+                    m_selectedChildUUID = eSelectedChildUUID.getTextContent();
                 }
-                        Element eSelectedChildUUID = (Element) nListSE.item(0);
-                        m_selectedChildUUID = eSelectedChildUUID.getTextContent();
-                }
+            }
 
             // Get ALL Childrens
             NodeList nList = doc.getDocumentElement().getElementsByTagName("Childrens");
@@ -453,7 +447,7 @@ public class ChildrenList {
             for (int i = 0; i < childArrayList.size(); i++) {
                 Child child = childArrayList.get(i);
                 String childId2 = child.getChildId().toLowerCase().trim().replaceAll("[\\p{Cc}\\p{Cf}\\p{Co}\\p{Cn}]", "?");
-                byte[] b = childId1.getBytes(StandardCharsets.UTF_16); // Java 7+ only
+                byte[] b = childId2.getBytes(StandardCharsets.UTF_16); // Java 7+ only
                 boolean bIdentical=true;
                 if (a.length!=b.length){
                     continue;

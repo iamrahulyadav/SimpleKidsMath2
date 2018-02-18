@@ -174,4 +174,42 @@ public class ChildrenListPresentor {
             ex1.printStackTrace();
         }
     }
+
+    public void CopyDefaultImageToIV(ImageView iv,String ImageUuid){
+        try {
+
+            // Ensure that pics directory exists
+            File rootPics = getPicsDirectory();
+            File rootDownload = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+            if (!rootPics.exists())
+            {
+                rootPics.mkdirs();
+            }
+            File root = getPicsDirectory();
+            File sdImageMainDirectory = new File(root, ImageUuid+".jpg");
+            if (sdImageMainDirectory.exists()) {
+                // Bail out if image already exists
+                return;
+            }
+
+            InputStream in = m_context.getResources().openRawResource(R.raw.little_boy_grey2);
+            FileOutputStream out = new FileOutputStream(sdImageMainDirectory);
+            byte[] buff = new byte[1024];
+            int read = 0;
+
+            try {
+                while ((read = in.read(buff)) > 0) {
+                    out.write(buff, 0, read);
+                }
+            } finally {
+                in.close();
+                out.close();
+            }
+        }
+        catch(IOException ex1)
+        {
+            ex1.printStackTrace();
+        }
+        AssignImageToImageView(iv,ImageUuid+".jpg");
+    }
 }

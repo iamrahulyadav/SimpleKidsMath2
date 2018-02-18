@@ -42,5 +42,17 @@
         android:contentDescription="@string/result_image_desc"
         android:src="@drawable/placeholder"/>
 
-
+    <Button
+        android:id="@+id/btnDeleteChild"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="12dp"
+        android:onClick="onDeleteChildClick"
+        android:textColor="#ffffff"
+        android:background="#ff0000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="@string/main_button_delete_child"/>
 </android.support.constraint.ConstraintLayout>
