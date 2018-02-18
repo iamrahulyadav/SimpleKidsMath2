@@ -39,19 +39,19 @@ import java.util.Random;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static Boolean TRACE_FLAG = true;
+    public static Boolean TRACE_FLAG = false;
     public static String CHILD_MODE = "CHILD_MODE";
     public static String CHILD_MODE_VALUE_ADD = "ADD";
     public static String CHILD_MODE_VALUE_CHG = "CHG";
     public static String CHILD_MODE_ID = "CHILD_MODE_ID";
 
     protected ChildrenList m_clist;
+    protected ChildrenListPresentor m_clistPresentor;
 
     public static final  int ADD_CHILD_REQUEST=1;
     public static final  int OPTION_REQUEST=2;
 
 
-    public static final int MAX_NUM=20;
     public static final String FIRST_PARAM="firstp";
     public static final String SECOND_PARAM="secondp";
     public static final String OPERATOR_PARAM="+";
@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity
     TextView tv2;
     TextView tvop;
     EditText etResult;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +79,7 @@ public class MainActivity extends AppCompatActivity
                         .setAction("Action", null).show();
             }
         });
+        m_clistPresentor=new ChildrenListPresentor(this);
         m_clist=ChildrenList.getInstance();
         m_clist.setContext(this);
         m_clist.LoadData();
@@ -152,7 +154,6 @@ public class MainActivity extends AppCompatActivity
                             ImageView iv = (ImageView) findViewById(R.id.imageButtonGood);
                             iv.setVisibility(View.VISIBLE);
                         }
-
                     }
                     else
                     {
@@ -166,11 +167,9 @@ public class MainActivity extends AppCompatActivity
                             iv.setVisibility(View.VISIBLE);
                         }
                     }
-
                 }
                 catch(Exception ex1)
                 {
-
                 }
             }
 
@@ -179,13 +178,22 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
-
         InitRound();
     }
 
-
     protected void FindViews()
     {
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        View hView =  navigationView.getHeaderView(0);
+        ImageButton ib= hView.findViewById(R.id.imageButton);
+
+        ib.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                OpenEditChild();
+            }
+        });
+
         tv1=findViewById(R.id.textView1stArg);
         tv2=findViewById(R.id.textView2ndArg);
         tvop=findViewById(R.id.textViewSign);
@@ -194,7 +202,6 @@ public class MainActivity extends AppCompatActivity
         iv=(ImageView) findViewById(R.id.imageButtonGood);
         iv.setVisibility(View.INVISIBLE);
         tvop.setText("+");
-
     }
 
 
@@ -345,7 +352,16 @@ public class MainActivity extends AppCompatActivity
         }
         return super.onOptionsItemSelected(item);
     }
-
+    /*
+    Open Edit Child Activity
+     */
+    protected void OpenEditChild(){
+        Child child=m_clist.getSelectedChild();
+        Intent foo=new Intent(MainActivity.this,ChildMaintActivity.class);
+        foo.putExtra(CHILD_MODE,CHILD_MODE_VALUE_CHG);
+        foo.putExtra(CHILD_MODE_ID,child.getChildId());
+        startActivityForResult(foo, ADD_CHILD_REQUEST);
+    }
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -388,20 +404,13 @@ public class MainActivity extends AppCompatActivity
         View hView =  navigationView.getHeaderView(0);
         TextView nav_user = hView.findViewById(R.id.userName);
         nav_user.setText(child.getName());
-        ImageView iv= hView.findViewById(R.id.imageView);
+        ImageButton ib= hView.findViewById(R.id.imageButton);
 
-        if (iv==null) {
+        if (ib==null) {
             return;
         }
-        File root = new File(getApplicationInfo().dataDir + File.separator + "pics" + File.separator);
-        File sdImageMainDirectory = new File(root + File.separator+child.getImgName());
+        m_clistPresentor.AssignImageToImageButton(ib,child.getImgName());
 
-        if (sdImageMainDirectory.exists()){
-            Bitmap myBitmap = BitmapFactory.decodeFile(sdImageMainDirectory.getAbsolutePath());
-            if (myBitmap!=null) {
-                iv.setImageBitmap(myBitmap);
-            }
-        }
         m_clist = ChildrenList.getInstance();
         m_clist.setContext(this);
         m_clist.setSelectedChild(child);

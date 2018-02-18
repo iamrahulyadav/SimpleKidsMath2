@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "/Users/itzhaksavion/AndroidstudioProjects/SimpleKidsMath2/cropper/build/intermediates/incremental/mergeDebugAndroidTestResources/merged.dir/values-da/values-da.xml",
+            "outputFile": "C:\\Users\\z_savion\\AndroidStudioProjects\\SimpleKidsMath2\\cropper\\build\\intermediates\\incremental\\mergeDebugAndroidTestResources\\merged.dir\\values-da\\values-da.xml",
             "map": [
                 {
-                    "source": "/Users/itzhaksavion/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.0.2.aar/9b56aaea7068ebc787df39e08f1fa900/res/values-da/values-da.xml",
+                    "source": "C:\\Users\\z_savion\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.0.2.aar\\88cd8a954687083d905d8b341ec60d3e\\res\\values-da\\values-da.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -14,7 +14,7 @@
                     }
                 },
                 {
-                    "source": "/Users/itzhaksavion/.gradle/caches/transforms-1/files-1.1/support-compat-27.0.2.aar/5afaa7db35bde6e192b9fe21869f6bbb/res/values-da/values-da.xml",
+                    "source": "C:\\Users\\z_savion\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-27.0.2.aar\\af649af394ed8a8ced306d2499e1dcae\\res\\values-da\\values-da.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

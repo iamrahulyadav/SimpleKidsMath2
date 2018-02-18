@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -46,13 +47,17 @@ public class ChildMaintActivity extends AppCompatActivity {
     Boolean      m_flagClickSelect=false;
     EditText     etName;
     ChildrenList m_clist;
+    ChildrenListPresentor m_clistPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_child_maint);
 
+        m_clistPresenter=new ChildrenListPresentor(this);
         etName= (EditText) findViewById(R.id.editTextName);
+        m_clist=ChildrenList.getInstance();
+        m_clist.setContext(this);
 
         if (savedInstanceState!=null)
         {
@@ -76,7 +81,7 @@ public class ChildMaintActivity extends AppCompatActivity {
             UpdateUIFromPreferences();
             Intent myIntent=getIntent();
             Bundle bundle=myIntent.getExtras();
-            m_Mode=bundle.getString(MainActivity.CHILD_MODE,"ADD");
+            m_Mode=bundle.getString(MainActivity.CHILD_MODE,MainActivity.CHILD_MODE_VALUE_ADD);
             m_ModeId=bundle.getString(MainActivity.CHILD_MODE_ID,"");
 
             if (m_ModeId.trim().length()==0){
@@ -84,12 +89,18 @@ public class ChildMaintActivity extends AppCompatActivity {
                 UUID uuid = UUID.randomUUID();
                 String randomUUIDString = uuid.toString();
                 m_ModeId = randomUUIDString;
+            }else {
+                Child currChild=m_clist.GetChildByChildId(m_ModeId);
+                if (currChild==null){
+                    finish();
+                }
+                etName.setText(currChild.getName());
+                // Load Picture
+                ImageView iv = findViewById(R.id.quick_start_cropped_image);
+                m_clistPresenter.AssignImageToImageView(iv,currChild.getImgName());
             }
         }
-
-        m_clist=ChildrenList.getInstance();
-        m_clist.setContext(this);
-
+        // Ask for permissions
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED )
@@ -103,13 +114,11 @@ public class ChildMaintActivity extends AppCompatActivity {
                     11);
             return;
         }
-
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions, @NonNull int[] grantResults) {
-
         if (requestCode==11)
         {
             if (grantResults.length > 0
@@ -171,7 +180,7 @@ public class ChildMaintActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState, outPersistentState);
         outState.putString(STATE_NAME,etName.getText().toString());
         outState.putString(STATE_UUID,m_ModeId);
-        outState.putString(STATE_UUID,m_Mode);
+        outState.putString(STATE_MODE,m_Mode);
     }
 
     @Override
@@ -233,76 +242,24 @@ public class ChildMaintActivity extends AppCompatActivity {
         }
     }
 
-
     protected void SaveImage(){
-
-        // Create Pics Directory
-        File rootPics = new File(getApplicationInfo().dataDir+File.separator+"pics");
-        File rootDownload = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        if (!rootPics.exists())
-        {
-            rootPics.mkdirs();
-        }
-
         ImageView  imageview = (ImageView) findViewById(R.id.quick_start_cropped_image);
-        imageview.buildDrawingCache();
-        Bitmap bm=imageview.getDrawingCache();
-        OutputStream fOut = null;
-        Uri outputFileUri;
-        try {
-            PackageManager m = getPackageManager();
-            String s = getPackageName();
-            File root = new File(getApplicationInfo().dataDir + File.separator + "pics" + File.separator);
-            File sdImageMainDirectory = new File(root, m_ModeId+".jpg");
-            if (sdImageMainDirectory.exists()) {
+        m_clistPresenter.SaveImage(imageview,m_ModeId);
 
-            }
-            outputFileUri = Uri.fromFile(sdImageMainDirectory);
-            fOut = new FileOutputStream(sdImageMainDirectory);
-        } catch (Exception e) {
-            Toast.makeText(this, "Error occured. Please try again later.",
-                    Toast.LENGTH_SHORT).show();
-        }
-        try {
-            bm.compress(Bitmap.CompressFormat.PNG, 100, fOut);
-            fOut.flush();
-            fOut.close();
-
-            // Copy to downloads dir
-        } catch (Exception e) {
-        }
-
-        if (MainActivity.TRACE_FLAG) {
-            // For Debug, copy the file into Downloads Directory
-
-            File root = new File(getApplicationInfo().dataDir + File.separator + "pics" + File.separator);
-            File sdImageMainDirectory = new File(root, m_ModeId + ".jpg");
-            File dst = new File(rootDownload, m_ModeId + ".jpg");
-                   if (sdImageMainDirectory.exists()) {
-                // Copy the file
-                try (InputStream in = new FileInputStream(sdImageMainDirectory)) {
-                    try (OutputStream out = new FileOutputStream(dst)) {
-                        // Transfer bytes from in to out
-                        byte[] buf = new byte[1024];
-                        int len;
-                        while ((len = in.read(buf)) > 0) {
-                            out.write(buf, 0, len);
-                        }
-                    } catch (Exception ex1) {
-                        Log.e("Pic2Download", ex1.getMessage());
-                        ex1.printStackTrace();
-                    }
-                } catch (Exception ex1) {
-                    Log.e("Pic2Download", ex1.getMessage());
-                    ex1.printStackTrace();
-                }
-            }
-        }
-        // Save Child In Database
-        Child child=new Child(etName.getText().toString().trim());
-        child.setImgName(m_ModeId+".jpg");
-        m_clist=ChildrenList.getInstance();
+        m_clist = ChildrenList.getInstance();
         m_clist.setContext(this);
-        m_clist.Add(child);
+
+        if (m_Mode.compareTo(MainActivity.CHILD_MODE_VALUE_ADD)==0) {
+            // Save Child In Database
+            Child child = new Child(etName.getText().toString().trim());
+            child.setImgName(m_ModeId + ".jpg");
+            m_clist.Add(child);
+        }
+        if (m_Mode.compareTo(MainActivity.CHILD_MODE_VALUE_CHG)==0) {
+            Child currChild=m_clist.GetChildByChildId(m_ModeId);
+            currChild.setName(etName.getText().toString().trim());
+            currChild.setImgName(m_ModeId + ".jpg");
+            m_clist.SaveData();
+        }
     }
 }

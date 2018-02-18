@@ -43,6 +43,7 @@ public class ChildrenList {
     private Context myContext;
     private Integer startMenuId=122;
     private String m_selectedChildUUID="";
+    private ChildrenListPresentor m_clistPresentor=null;
 
     public static ChildrenList getInstance()
     {
@@ -54,11 +55,14 @@ public class ChildrenList {
     public void setContext(Context context)
     {
         myContext = context;
+        if (m_clistPresentor!=null) {
+            m_clistPresentor.setContext(myContext);
+        }
     }
 
     private ChildrenList()
     {
-        childArrayList = new ArrayList<>();
+        childArrayList = new ArrayList<>(); m_clistPresentor=new ChildrenListPresentor(myContext);
     }
 
     public void Add(Child child)
@@ -243,12 +247,10 @@ public class ChildrenList {
                     ex1.printStackTrace();
                 }
             }
-
         }
     }
     public void LoadData(){
         try {
-
             String newFileName = myContext.getApplicationInfo().dataDir+"/" + filename;
             File fXmlFile = new File(newFileName);
             if (!fXmlFile.exists()){
@@ -385,41 +387,7 @@ public class ChildrenList {
     }
 
     public void CopyDefaultImage(){
-
-        try {
-
-            // Ensure that pics directory exists
-            File rootPics = new File(myContext.getApplicationInfo().dataDir+File.separator+"pics");
-            File rootDownload = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-            if (!rootPics.exists())
-            {
-                rootPics.mkdirs();
-            }
-            File root = new File(myContext.getApplicationInfo().dataDir + File.separator + "pics" + File.separator);
-            File sdImageMainDirectory = new File(root, DEFAULT_CHILD+".jpg");
-            if (sdImageMainDirectory.exists()) {
-                // Bail out if image already exists
-                return;
-            }
-
-            InputStream in = myContext.getResources().openRawResource(R.raw.little_boy_grey2);
-            FileOutputStream out = new FileOutputStream(sdImageMainDirectory);
-            byte[] buff = new byte[1024];
-            int read = 0;
-
-            try {
-                while ((read = in.read(buff)) > 0) {
-                    out.write(buff, 0, read);
-                }
-            } finally {
-                in.close();
-                out.close();
-            }
-        }
-        catch(IOException ex1)
-        {
-            ex1.printStackTrace();
-        }
+        m_clistPresentor.CopyDefaultImage(DEFAULT_CHILD);
     }
 
     public Child[] getChildrenArray(){

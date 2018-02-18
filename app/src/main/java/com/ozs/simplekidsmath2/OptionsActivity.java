@@ -138,8 +138,6 @@ public class OptionsActivity extends AppCompatActivity {
         }
     }
 
-
-
     private void UpdateUIFromPreferences()
     {
         m_clist.setContext(this);

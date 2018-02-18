@@ -1,10 +1,20 @@
 {
     "logs": [
         {
-            "outputFile": "/Users/itzhaksavion/AndroidstudioProjects/SimpleKidsMath2/cropper/build/intermediates/incremental/mergeDebugAndroidTestResources/merged.dir/values-hr/values-hr.xml",
+            "outputFile": "C:\\Users\\z_savion\\AndroidStudioProjects\\SimpleKidsMath2\\cropper\\build\\intermediates\\incremental\\mergeDebugAndroidTestResources\\merged.dir\\values-hr\\values-hr.xml",
             "map": [
                 {
-                    "source": "/Users/itzhaksavion/.gradle/caches/transforms-1/files-1.1/support-compat-27.0.2.aar/5afaa7db35bde6e192b9fe21869f6bbb/res/values-hr/values-hr.xml",
+                    "source": "C:\\Users\\z_savion\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.0.2.aar\\88cd8a954687083d905d8b341ec60d3e\\res\\values-hr\\values-hr.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "105,210,307,417,503,607,726,810,893,979,1083,1196,1302,1407,1520,1627,1796,1893",
+                        "endColumns": "104,96,109,85,103,118,83,82,85,103,112,105,104,112,106,168,96,88",
+                        "endOffsets": "205,302,412,498,602,721,805,888,974,1078,1191,1297,1402,1515,1622,1791,1888,1977"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\z_savion\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-27.0.2.aar\\af649af394ed8a8ced306d2499e1dcae\\res\\values-hr\\values-hr.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
@@ -18,16 +28,6 @@
                         "startOffsets": "1982",
                         "endColumns": "100",
                         "endOffsets": "2078"
-                    }
-                },
-                {
-                    "source": "/Users/itzhaksavion/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.0.2.aar/9b56aaea7068ebc787df39e08f1fa900/res/values-hr/values-hr.xml",
-                    "from": {
-                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "105,210,307,417,503,607,726,810,893,979,1083,1196,1302,1407,1520,1627,1796,1893",
-                        "endColumns": "104,96,109,85,103,118,83,82,85,103,112,105,104,112,106,168,96,88",
-                        "endOffsets": "205,302,412,498,602,721,805,888,974,1078,1191,1297,1402,1515,1622,1791,1888,1977"
                     }
                 }
             ]
