@@ -247,7 +247,11 @@ public class ChildMaintActivity extends AppCompatActivity {
                 .start(this);
     }
     public void onDeleteChildClick(View view){
-
+        Child child=m_clist.GetChildByChildId(m_ModeId);
+        if (child!=null) {
+            m_clist.RemoveChild(child);
+            finish();
+        }
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

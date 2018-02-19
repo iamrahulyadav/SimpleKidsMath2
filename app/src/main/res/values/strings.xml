@@ -21,5 +21,6 @@
     <string name="lbl_mult">Multiplicaton</string>
     <string name="lbl_div">Deviation</string>
     <string name="main_button_delete_child">Remove Child</string>
+    <string name="lbl_no_children_exeeded">Number of children exeeded</string>
 
 </resources>

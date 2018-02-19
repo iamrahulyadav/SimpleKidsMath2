@@ -48,6 +48,13 @@ public class ChildrenListPresentor {
         File sdImagePath = new File(rootPics + File.separator+picName);
         return sdImagePath;
     }
+
+    public void DeletePic(String picName){
+        File root=getPicsDirectory(picName);
+        if (root.exists()){
+            root.delete();
+        }
+    }
     /*
      Assign Pic to Image View
      */

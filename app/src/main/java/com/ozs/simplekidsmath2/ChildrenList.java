@@ -439,6 +439,23 @@ public class ChildrenList {
         return null;
     }
 
+    public boolean CompareChildren(Child child1,Child child2){
+        String childId1 = child1.getChildId().toLowerCase().trim().replaceAll("[\\p{Cc}\\p{Cf}\\p{Co}\\p{Cn}]", "?");
+        byte[] a = childId1.getBytes(StandardCharsets.UTF_16); // Java 7+ only
+        String childId2 = child2.getChildId().toLowerCase().trim().replaceAll("[\\p{Cc}\\p{Cf}\\p{Co}\\p{Cn}]", "?");
+        byte[] b = childId2.getBytes(StandardCharsets.UTF_16); // Java 7+ only
+
+        if (a.length!=b.length){
+            return false;
+        }
+        for(int j=0;j<a.length;j++){
+            if (a[j]!=b[j]){
+                return false;
+            }
+        }
+        return true;
+    }
+
     public Child GetChildByChildId(String childId){
 
             String childId1 = childId.toLowerCase().trim().replaceAll("[\\p{Cc}\\p{Cf}\\p{Co}\\p{Cn}]", "?");
@@ -467,9 +484,69 @@ public class ChildrenList {
                 }
             }
             return null;
-
     }
 
+    public Integer GetChildIndexByChildId(String childId){
+
+        String childId1 = childId.toLowerCase().trim().replaceAll("[\\p{Cc}\\p{Cf}\\p{Co}\\p{Cn}]", "?");
+        byte[] a = childId1.getBytes(StandardCharsets.UTF_16); // Java 7+ only
+
+        for (int i = 0; i < childArrayList.size(); i++) {
+            Child child = childArrayList.get(i);
+            String childId2 = child.getChildId().toLowerCase().trim().replaceAll("[\\p{Cc}\\p{Cf}\\p{Co}\\p{Cn}]", "?");
+            byte[] b = childId2.getBytes(StandardCharsets.UTF_16); // Java 7+ only
+            boolean bIdentical=true;
+            if (a.length!=b.length){
+                continue;
+            }
+            for(int j=0;j<a.length;j++){
+                if (a[j]!=b[j]){
+                    bIdentical=false;
+                    break;
+                }
+            }
+            if (!bIdentical)
+            {
+                continue;
+            }
+            else{ // Match Found
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public void RemoveChild(Child child){
+        Child selectedChild=getSelectedChild();
+        boolean isSelected=false;
+        selectedChild=getSelectedChild();
+        if (selectedChild==null) {
+            isSelected=true;
+        }else{
+            isSelected=this.CompareChildren(selectedChild,child);
+        }
+        Integer idx=GetChildIndexByChildId(child.getChildId());
+        m_clistPresentor.DeletePic(child.getImgName());
+        childArrayList.remove(child);
+        boolean loadFlag=false;
+        if (isSelected)
+        {
+            if (childArrayList.size()>0)
+            {
+                Child schild=childArrayList.get(0);
+                setSelectedChild(schild);
+            }
+            else
+            {
+                // The Load will select the default item
+                loadFlag=true;
+            }
+        }
+        SaveData();
+        if (loadFlag){
+            LoadData();
+        }
+    }
 
     public void setSelectedChild(Child child){
         setSelectedChildUUID(child.getChildId());

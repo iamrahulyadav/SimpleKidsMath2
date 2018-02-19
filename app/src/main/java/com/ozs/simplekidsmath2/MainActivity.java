@@ -31,6 +31,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.util.Date;
@@ -39,11 +40,12 @@ import java.util.Random;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static Boolean TRACE_FLAG = false;
-    public static String CHILD_MODE = "CHILD_MODE";
-    public static String CHILD_MODE_VALUE_ADD = "ADD";
-    public static String CHILD_MODE_VALUE_CHG = "CHG";
-    public static String CHILD_MODE_ID = "CHILD_MODE_ID";
+    public static final Integer MAX_CHILDEREN = 6;
+    public static final Boolean TRACE_FLAG = false;
+    public static final String CHILD_MODE = "CHILD_MODE";
+    public static final String CHILD_MODE_VALUE_ADD = "ADD";
+    public static final String CHILD_MODE_VALUE_CHG = "CHG";
+    public static final String CHILD_MODE_ID = "CHILD_MODE_ID";
 
     protected ChildrenList m_clist;
     protected ChildrenListPresentor m_clistPresentor;
@@ -284,7 +286,7 @@ public class MainActivity extends AppCompatActivity
         Integer endCustomMenu=m_clist.GetMaxMenuId();
 
         // Remove OLD Menus:
-        for(int i=startCustomMenu;i<=endCustomMenu;i++) {
+        for(int i=122;i<=122+MAX_CHILDEREN-1;i++) {
             menu.removeItem(i);
         }
         // Add Childrens (up to 5)
@@ -293,7 +295,7 @@ public class MainActivity extends AppCompatActivity
         Child[] children=m_clist.getChildrenArray();
         if (children!=null)
         {
-            for(int i=0;((i<children.length)&&(i<4));i++){
+            for(int i=0;((i<children.length)&&(i<MAX_CHILDEREN));i++){
                 j++;
                 menu.add(R.id.referrer_group, children[i].getMenuId(), Menu.NONE, children[i].getName());
             }
@@ -369,10 +371,16 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         if (id == 121) {
-            Intent foo=new Intent(MainActivity.this,ChildMaintActivity.class);
-            foo.putExtra(CHILD_MODE,CHILD_MODE_VALUE_ADD);
-            foo.putExtra(CHILD_MODE_ID,0);
-            startActivityForResult(foo, ADD_CHILD_REQUEST);
+            if (m_clist.GetItemsSize()<=MAX_CHILDEREN) {
+                Intent foo = new Intent(MainActivity.this, ChildMaintActivity.class);
+                foo.putExtra(CHILD_MODE, CHILD_MODE_VALUE_ADD);
+                foo.putExtra(CHILD_MODE_ID, 0);
+                startActivityForResult(foo, ADD_CHILD_REQUEST);
+            }
+            else
+            {
+                Toast.makeText(this,getString(R.string.lbl_no_children_exeeded),Toast.LENGTH_LONG).show();
+            }
 
         } else if (id == R.id.nav_manage) {
             Intent foo=new Intent(MainActivity.this,OptionsActivity.class);
