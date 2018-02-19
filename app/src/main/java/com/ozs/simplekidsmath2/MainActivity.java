@@ -26,6 +26,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -57,7 +59,8 @@ public class MainActivity extends AppCompatActivity
     public static final String SECOND_PARAM="secondp";
     public static final String OPERATOR_PARAM="+";
 
-    ImageView iv;
+    ImageView ivgood;
+    ImageView ivbad;
     TextView tv1;
     TextView tv2;
     TextView tvop;
@@ -139,29 +142,42 @@ public class MainActivity extends AppCompatActivity
                 int n2=Integer.parseInt(tv2.getText().toString());
                 try {
                     int n3 = Integer.parseInt(charSequence.toString());
+                    View view = MainActivity.this.getCurrentFocus();
+                    if (view != null) {
+                        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                    }
+
                     if (tvop.getText().toString()=="+")
                     {
                         if (n1 + n2 == n3) {
 
-                            View view = MainActivity.this.getCurrentFocus();
-                            if (view != null) {
-                                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                            }
-                            ImageView iv = (ImageView) findViewById(R.id.imageButtonGood);
-                            iv.setVisibility(View.VISIBLE);
+                            // Display animation
+                            ivgood.setVisibility(View.VISIBLE);
+                            startAnimation(true);
+                        }
+                        else
+                        {
+                            ivbad.setVisibility(View.VISIBLE);
+                            startAnimation(false);
+
                         }
                     }
                     else
                     {
                         if (n1 - n2 == n3) {
-                            View view = MainActivity.this.getCurrentFocus();
-                            if (view != null) {
-                                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                            }
+
                             ImageView iv = (ImageView) findViewById(R.id.imageButtonGood);
-                            iv.setVisibility(View.VISIBLE);
+                            // Good answer animation
+                            ivgood.setVisibility(View.VISIBLE);
+                            startAnimation(true);
+                        }
+                        else
+                        {
+
+                            // Bad Answer Animation
+                            ivbad.setVisibility(View.VISIBLE);
+                            startAnimation(false);
                         }
                     }
                 }
@@ -203,21 +219,27 @@ public class MainActivity extends AppCompatActivity
         tvop=findViewById(R.id.textViewSign);
         etResult=findViewById(R.id.editTextRes);
 
-        iv=(ImageView) findViewById(R.id.imageButtonGood);
-        iv.setVisibility(View.INVISIBLE);
+        ivgood=(ImageView) findViewById(R.id.imageButtonGood);
+        ivgood.setVisibility(View.GONE);
+        ivbad = findViewById(R.id.imageButtonBad);
+        ivbad.setVisibility(View.GONE);
         tvop.setText("+");
     }
 
 
     public void InitRound()
     {
+        ivgood.setVisibility(View.GONE);
+        ivbad.setVisibility(View.GONE);
+
         m_clist.setContext(this);
         Child child = m_clist.getSelectedChild();
         if (child==null){
             child = new Child("dummy");
         }
 
-        iv.setVisibility(View.INVISIBLE);
+        ivgood.setVisibility(View.GONE);
+        ivbad.setVisibility(View.GONE);
         Random r = new Random(new Date().getTime());
 
         Integer n1start=child.getMinparam();
@@ -453,5 +475,86 @@ public class MainActivity extends AppCompatActivity
         tvop.setText(savedInstanceState.getString(OPERATOR_PARAM,"+"));
 
         super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    public void startAnimation(boolean isGoodAnswer)
+    {
+
+        ImageView aniView;
+        if (isGoodAnswer)
+        {
+            aniView=findViewById(R.id.imageButtonGood);
+        }
+        else
+        {
+            aniView=findViewById(R.id.imageButtonBad);
+        }
+		/*
+		float dest = 0;
+		dest = 360;
+	    if (aniView.getRotation() == 360) {
+	       System.out.println(aniView.getAlpha());
+	       dest = 0;
+	    }
+	    ObjectAnimator animation1 = ObjectAnimator.ofFloat(aniView,
+	        "rotation", dest);
+	    animation1.setDuration(2000);
+	    */
+
+        int animResource=R.anim.push_left_in;
+        Random rndGen=new Random();
+        int nRandInt=rndGen.nextInt(63);
+        nRandInt = nRandInt % 7;
+        switch(nRandInt)
+        {
+            case 0:
+                animResource=R.anim.fadein;
+                break;
+            case 1:
+                animResource=R.anim.fadeout;
+                break;
+            case 2:
+                animResource=R.anim.push_left_in;
+                break;
+            case 3:
+                animResource=R.anim.rotation;
+                break;
+            case 4:
+                animResource=R.anim.push_right_out;
+                break;
+            case 5:
+                animResource=R.anim.push_right_in;
+                break;
+            case 6:
+                animResource=R.anim.push_left_out;
+                break;
+            default:
+                animResource=R.anim.push_left_in;
+                break;
+        }
+
+
+        //load an animation from XML
+        Animation animation1 = AnimationUtils.loadAnimation(this,animResource);
+        // animation1.setAnimationListener(this);
+        animation1.setDuration(2000);
+
+        animation1.setAnimationListener(new Animation.AnimationListener(){
+            @Override
+            public void onAnimationStart(Animation arg0) {
+            }
+            @Override
+            public void onAnimationRepeat(Animation arg0) {
+            }
+            @Override
+            public void onAnimationEnd(Animation arg0) {
+                // Bail out to next screen
+                // --> Move to next questio NextPrevQ("Next");
+                ivgood.setVisibility(View.GONE);
+                ivbad.setVisibility(View.GONE);
+            }
+        });
+        aniView.startAnimation(animation1);
+        //animation1.start();
     }
 }

@@ -21,11 +21,11 @@
         android:weightSum="1">
 
         <ImageButton
-            android:layout_width="199dp"
-            android:layout_height="177dp"
-            app:srcCompat="@drawable/on_off_switch"
             android:id="@+id/imageButtonGen"
-            android:layout_weight="0.41" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.41"
+            app:srcCompat="@drawable/next_question" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -80,12 +80,27 @@
             android:layout_weight="1"
             android:id="@+id/editTextRes" />
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:paddingTop="20dp"
+        android:layout_height="wrap_content">
 
-    <ImageView
-        android:layout_width="203dp"
-        android:layout_height="181dp"
-        android:layout_gravity="right"
-        app:srcCompat="@drawable/mickey_mouse_with_gloves"
-        android:id="@+id/imageButtonGood" />
+        <ImageView
+            android:id="@+id/imageButtonBad"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/bad_answer"
+            tools:layout_width="wrap_content" />
+
+        <ImageView
+            android:id="@+id/imageButtonGood"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/good_answer"
+            tools:layout_width="wrap_content" />
+    </LinearLayout>
 
 </LinearLayout>
