@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -65,6 +66,8 @@ public class MainActivity extends AppCompatActivity
     TextView tv2;
     TextView tvop;
     EditText etResult;
+    Boolean  answerWaitFlag=false;
+    Boolean  inAnswerDelay=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,52 +141,20 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-                int n1=Integer.parseInt(tv1.getText().toString());
-                int n2=Integer.parseInt(tv2.getText().toString());
-                try {
-                    int n3 = Integer.parseInt(charSequence.toString());
-                    View view = MainActivity.this.getCurrentFocus();
-                    if (view != null) {
-                        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                    }
-
-                    if (tvop.getText().toString()=="+")
-                    {
-                        if (n1 + n2 == n3) {
-
-                            // Display animation
-                            ivgood.setVisibility(View.VISIBLE);
-                            startAnimation(true);
-                        }
-                        else
-                        {
-                            ivbad.setVisibility(View.VISIBLE);
-                            startAnimation(false);
-
-                        }
-                    }
-                    else
-                    {
-                        if (n1 - n2 == n3) {
-
-                            ImageView iv = (ImageView) findViewById(R.id.imageButtonGood);
-                            // Good answer animation
-                            ivgood.setVisibility(View.VISIBLE);
-                            startAnimation(true);
-                        }
-                        else
-                        {
-
-                            // Bad Answer Animation
-                            ivbad.setVisibility(View.VISIBLE);
-                            startAnimation(false);
-                        }
-                    }
+                if (inAnswerDelay) {
+                    return;
                 }
-                catch(Exception ex1)
-                {
-                }
+
+                final Handler handler = new Handler();
+                inAnswerDelay=true;
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //Do something after 100ms
+                        CheckResults();
+                    }
+                }, 2000);
+
             }
 
             @Override
@@ -229,6 +200,7 @@ public class MainActivity extends AppCompatActivity
 
     public void InitRound()
     {
+        answerWaitFlag = false;
         ivgood.setVisibility(View.GONE);
         ivbad.setVisibility(View.GONE);
 
@@ -272,6 +244,65 @@ public class MainActivity extends AppCompatActivity
         etResult.setText("");
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(etResult, InputMethodManager.SHOW_IMPLICIT);
+        answerWaitFlag=true;
+    }
+
+    protected void InitRoundHelperAction()
+
+    protected void CheckResults(){
+
+        int n1=Integer.parseInt(tv1.getText().toString());
+        int n2=Integer.parseInt(tv2.getText().toString());
+
+        try {
+            int n3 = Integer.parseInt(etResult.getText().toString());
+            View view = MainActivity.this.getCurrentFocus();
+            if (view != null) {
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+
+            if (tvop.getText().toString()=="+")
+            {
+
+                if (n1 + n2 == n3) {
+
+                    // Display animation
+                    ivgood.setVisibility(View.VISIBLE);
+                    startAnimation(true);
+                }
+                else
+                {
+                    ivbad.setVisibility(View.VISIBLE);
+                    startAnimation(false);
+
+                }
+            }
+            else
+            {
+                if (n1 - n2 == n3) {
+
+                    ImageView iv = (ImageView) findViewById(R.id.imageButtonGood);
+                    // Good answer animation
+                    ivgood.setVisibility(View.VISIBLE);
+                    startAnimation(true);
+                }
+                else
+                {
+
+                    // Bad Answer Animation
+                    ivbad.setVisibility(View.VISIBLE);
+                    startAnimation(false);
+                }
+            }
+        }
+        catch(Exception ex1)
+        {
+        }
+        finally {
+            inAnswerDelay=false;
+            answerWaitFlag=false;
+        }
     }
 
     @Override
