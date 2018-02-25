@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity
 
     protected ChildrenList m_clist;
     protected ChildrenListPresentor m_clistPresentor;
+    protected Child m_selectedChild=null;
 
     public static final  int ADD_CHILD_REQUEST=1;
     public static final  int OPTION_REQUEST=2;
@@ -200,6 +201,12 @@ public class MainActivity extends AppCompatActivity
 
     public void InitRound()
     {
+        m_clist=ChildrenList.getInstance();
+        m_clist.setContext(this);
+        m_selectedChild=null;
+        m_selectedChild=m_clist.getSelectedChild();
+        int nOp=InitRoundHelperAction();
+
         answerWaitFlag = false;
         ivgood.setVisibility(View.GONE);
         ivbad.setVisibility(View.GONE);
@@ -214,31 +221,50 @@ public class MainActivity extends AppCompatActivity
         ivbad.setVisibility(View.GONE);
         Random r = new Random(new Date().getTime());
 
-        Integer n1start=child.getMinparam();
-        Integer n1end=child.getMaxparam();
+        Integer n1start=m_selectedChild.getMinparam();
+        Integer n1end=m_selectedChild.getMaxparam();
+        int norm=n1end-n1start;
+        norm=Math.abs(norm);
         // Normalize the result
-        if (n1start<0){
 
+        Integer n1=r.nextInt(norm);
+        Integer n2=r.nextInt(norm);
+        // Move the result back to range
+        n1=n1start+n1;
+        n2=n1start+n2;
+
+        String strOp="";
+        switch(nOp){
+            case 1:
+                strOp="+";
+                break;
+            case 2:
+                strOp="-";
+                break;
+            case 3:
+                strOp="*";
+                break;
+            case 4:
+                strOp="/";
+                break;
+            default:
+                strOp="+";
         }
 
-        Integer n1=r.nextInt(10);;
-        Integer n2=r.nextInt(10);;
-
-        if (new Date().getTime() % 2 ==0 )
-        {
-            tvop.setText("+");
-        }
-        else
+        // Case of subtracion
+        if (nOp==2)
         {
             tvop.setText("-");
-            if (n2 > n1)
-            {
-                int nt=n1;
-                n1=n2;
-                n2=nt;
+            if (!child.getAllowMinusResult()) {
+                if (n2 > n1) {
+                    int nt = n1;
+                    n1 = n2;
+                    n2 = nt;
+                }
             }
         }
 
+        tvop.setText(strOp);
         tv1.setText(n1.toString());
         tv2.setText(n2.toString());
         etResult.setText("");
@@ -247,7 +273,45 @@ public class MainActivity extends AppCompatActivity
         answerWaitFlag=true;
     }
 
-    protected void InitRoundHelperAction()
+    protected int InitRoundHelperAction(){
+        int[]  arOp={0,0,0,0};
+        arOp[0]=(m_selectedChild.getAdd())?1:0;
+        arOp[1]=(m_selectedChild.getSub())?1:0;
+        arOp[2]=(m_selectedChild.getMult())?1:0;
+        arOp[3]=(m_selectedChild.getDiv())?1:0;
+
+        int num=0;
+        // How Many "1"
+        for(int i=0;i<4;i++){
+            if (arOp[i]==1){
+                num++;
+            }
+        }
+        if (num==0) {
+            return 0;
+        }
+        if (num==1){
+            for(int i=0;i<4;i++){
+                if (arOp[i]==1){
+                    return (i+1);
+                }
+            }
+        }
+        Random r = new Random(new Date().getTime());
+        Integer n1=r.nextInt(num-1);
+        int num2 = -1;
+        for(int i=0;i<4;i++)
+        {
+            if (arOp[i]==1){
+                num2++;
+            }
+            if (num2>=n1){
+                return (i+1);
+            }
+        }
+        return 0;
+
+    }
 
     protected void CheckResults(){
 
@@ -266,33 +330,36 @@ public class MainActivity extends AppCompatActivity
             {
 
                 if (n1 + n2 == n3) {
-
-                    // Display animation
-                    ivgood.setVisibility(View.VISIBLE);
-                    startAnimation(true);
+                        GoodSign();
                 }
                 else
                 {
-                    ivbad.setVisibility(View.VISIBLE);
-                    startAnimation(false);
-
+                        BadSign();
                 }
             }
-            else
-            {
+            else if (tvop.getText().toString()=="-") {
                 if (n1 - n2 == n3) {
-
-                    ImageView iv = (ImageView) findViewById(R.id.imageButtonGood);
-                    // Good answer animation
-                    ivgood.setVisibility(View.VISIBLE);
-                    startAnimation(true);
+                        GoodSign();
                 }
                 else
                 {
-
-                    // Bad Answer Animation
-                    ivbad.setVisibility(View.VISIBLE);
-                    startAnimation(false);
+                        BadSign();
+                }
+            }else if (tvop.getText().toString()=="*") {
+                if (n1 * n2 == n3) {
+                        GoodSign();
+                }
+                else
+                {
+                        BadSign();
+                }
+            }else {
+                if (n1 / n2 == n3) {
+                        GoodSign();
+                }
+                else
+                {
+                        BadSign();
                 }
             }
         }
@@ -303,6 +370,18 @@ public class MainActivity extends AppCompatActivity
             inAnswerDelay=false;
             answerWaitFlag=false;
         }
+    }
+    // Display Good result Sign
+    protected void GoodSign(){
+        // Display animation
+        ivgood.setVisibility(View.VISIBLE);
+        startAnimation(true);
+    }
+
+    // Display Bad Result Sign
+    protected void BadSign(){
+        ivbad.setVisibility(View.VISIBLE);
+        startAnimation(false);
     }
 
     @Override

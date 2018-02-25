@@ -34,8 +34,7 @@ public class Child {
     private Boolean  isSub=true;
     private Boolean  isMult=true;
     private Boolean  isDiv=true;
-
-
+    private Boolean  isAllowMinusResult=false;
 
 
     public Child(String name) {
@@ -259,5 +258,13 @@ public class Child {
 
     public void setDiv(Boolean div) {
         isDiv = div;
+    }
+
+    public Boolean getAllowMinusResult() {
+        return isAllowMinusResult;
+    }
+
+    public void setAllowMinusResult(Boolean allowMinusResult) {
+        isAllowMinusResult = allowMinusResult;
     }
 }
