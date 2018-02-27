@@ -17,7 +17,10 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -134,6 +137,7 @@ public class MainActivity extends AppCompatActivity
 
 
         EditText etResult=(EditText) findViewById(R.id.editTextRes);
+
         etResult.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -141,7 +145,9 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+                if (!answerWaitFlag){
+                    return;
+                }
                 if (inAnswerDelay) {
                     return;
                 }
@@ -165,6 +171,59 @@ public class MainActivity extends AppCompatActivity
         });
         InitRound();
     }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        //replaces the default 'Back' button action
+        if(keyCode==KeyEvent.KEYCODE_ENTER)
+        {
+            if (!answerWaitFlag){
+                return false;
+            }
+
+            if (inAnswerDelay) {
+                return false;
+            }
+
+            final Handler handler = new Handler();
+            inAnswerDelay=true;
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    //Do something after 100ms
+                    CheckResults();
+                }
+            }, 250);
+        }
+        return true;
+    }
+
+    private View.OnTouchListener handleTouch = new View.OnTouchListener() {
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+
+            if (!answerWaitFlag) {
+                return true;
+            }
+
+            if (inAnswerDelay) {
+                return true;
+            }
+
+            final Handler handler = new Handler();
+            inAnswerDelay = true;
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    //Do something after 100ms
+                    CheckResults();
+                }
+            }, 250);
+
+            return true;
+        }
+    };
 
     protected void CreateCList(){
         m_clist=ChildrenList.getInstance();
@@ -196,6 +255,9 @@ public class MainActivity extends AppCompatActivity
         ivbad = findViewById(R.id.imageButtonBad);
         ivbad.setVisibility(View.GONE);
         tvop.setText("+");
+
+        View v=findViewById(R.id.activity_main);
+        v.setOnTouchListener(handleTouch);
     }
 
 
@@ -369,6 +431,7 @@ public class MainActivity extends AppCompatActivity
         finally {
             inAnswerDelay=false;
             answerWaitFlag=false;
+            InitRound();
         }
     }
     // Display Good result Sign

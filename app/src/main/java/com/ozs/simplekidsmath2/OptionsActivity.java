@@ -32,6 +32,8 @@ public class OptionsActivity extends AppCompatActivity {
     CheckBox cbSubOp;
     CheckBox cbMultOp;
     CheckBox cbDivOp;
+    CheckBox cbAllowMinusRes;
+    TextView tvError2;
 
 
 
@@ -60,7 +62,8 @@ public class OptionsActivity extends AppCompatActivity {
         cbSubOp=findViewById(R.id.checkBoxSub);
         cbMultOp=findViewById(R.id.checkBoxMult);
         cbDivOp=findViewById(R.id.checkBoxDiv);
-
+        cbAllowMinusRes=findViewById(R.id.checkAllowMinus);
+        tvError2=findViewById(R.id.optionsErrorMsg2);
 
     }
 
@@ -81,8 +84,10 @@ public class OptionsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item){
 
         if (item.getItemId()==android.R.id.home) {
-            SavePreferences(true);
-            finish();
+           if (SavePreferences(true)){
+               finish();
+           }
+
         }
         return true;
     }
@@ -149,12 +154,50 @@ public class OptionsActivity extends AppCompatActivity {
         cbSubOp.setChecked(selectedChild.getSub());
         cbMultOp.setChecked(selectedChild.getMult());
         cbDivOp.setChecked(selectedChild.getDiv());
+        cbAllowMinusRes.setChecked(selectedChild.getAllowMinusResult());
+        tvError2.setText("");
 
     }
+    private Boolean Validate() {
+        String strMin=etMinValue.getText().toString();
+        String strMax=etMaxValue.getText().toString();
+        Integer n1,n2;
 
-    private void SavePreferences(Boolean IsFinish){
+        try {
+            n1 = Integer.parseInt(strMin);
+            n2 = Integer.parseInt(strMax);
+        }catch (NumberFormatException e) {
+            tvError2.setText(R.string.option_error_invalidint);
+            return false;
+        }
+        if (!cbAllowMinusRes.isChecked())
+        {
+            if ((n1<0)||(n2<0))
+            {
+                tvError2.setText(R.string.option_error_minusparams);
+                return false;
+            }
+        }
 
+        if (!cbAllowMinusRes.isChecked())
+        {
+            if (n1>n2)
+            {
+                tvError2.setText(R.string.option_error_fromltto);
+                return false;
+            }
+        }
+
+        return true;
+
+    }
+    private Boolean SavePreferences(Boolean IsFinish)
+    {
         m_clist.setContext(this);
+
+        if (!Validate()){
+            return false;
+        }
 
         String strMin=etMinValue.getText().toString();
         String strMax=etMaxValue.getText().toString();
@@ -174,8 +217,7 @@ public class OptionsActivity extends AppCompatActivity {
         if (IsFinish){
             finish();
         }
-
+        return true;
     }
-
 }
 

@@ -128,6 +128,7 @@ public class ChildrenList {
                 Element isSubx=doc.createElement("isSub");
                 Element isMultx = doc.createElement("isMult");
                 Element isDivx = doc.createElement("isDiv");
+                Element isAllowMinusResults=doc.createElement("isAllowMinusResults");
 
                 minparamx.appendChild(doc.createTextNode(child.getMinparam().toString()));
                 maxparamx.appendChild(doc.createTextNode(child.getMaxparam().toString()));
@@ -157,6 +158,7 @@ public class ChildrenList {
                 isSubx.appendChild(doc.createTextNode(child.getSub() ? "1":"0"));
                 isMultx.appendChild(doc.createTextNode(child.getMult() ? "1":"0"));
                 isDivx.appendChild(doc.createTextNode(child.getDiv() ? "1":"0"));
+                isAllowMinusResults.appendChild(doc.createTextNode(child.getAllowMinusResult() ? "1":"0"));
 
                 childx.appendChild(childidx);
                 childx.appendChild(namex);
@@ -186,6 +188,7 @@ public class ChildrenList {
                 childx.appendChild(isSubx);
                 childx.appendChild(isMultx);
                 childx.appendChild(isDivx);
+                childx.appendChild(isAllowMinusResults);
 
                 childrensx.appendChild(childx);
             }
@@ -324,6 +327,7 @@ public class ChildrenList {
                             String isSub=eChild.getElementsByTagName("isSub").item(0).getTextContent();
                             String isMult=eChild.getElementsByTagName("isMult").item(0).getTextContent();
                             String isDiv=eChild.getElementsByTagName("isDiv").item(0).getTextContent();
+                            String isAllowMinusResults=eChild.getElementsByTagName("isAllowMinusResults").item(0).getTextContent();
 
 
                             Child child=new Child(childid,name);
@@ -356,6 +360,7 @@ public class ChildrenList {
                             child.setSub(Integer.parseInt(isSub)==1);
                             child.setMult(Integer.parseInt(isMult)==1);
                             child.setDiv(Integer.parseInt(isDiv)==1);
+                            child.setAllowMinusResult(Integer.parseInt(isAllowMinusResults)==1);
 
                             this.Add(child,false);
                             // childArrayList.add(child);

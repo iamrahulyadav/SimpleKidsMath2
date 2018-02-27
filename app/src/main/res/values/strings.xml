@@ -20,7 +20,11 @@
     <string name="lbl_sub">Subtraction</string>
     <string name="lbl_mult">Multiplicaton</string>
     <string name="lbl_div">Deviation</string>
+    <string name="lbl_allow_minus">Allow Minus Results</string>
     <string name="main_button_delete_child">Remove Child</string>
     <string name="lbl_no_children_exeeded">Number of children exeeded</string>
+    <string name="option_error_invalidint">Invalid Integers</string>
+    <string name="option_error_minusparams">Minus values not allowed when allow minus is unchecked</string>
+    <string name="option_error_fromltto">Min value must be lowered than max value</string>
 
 </resources>
