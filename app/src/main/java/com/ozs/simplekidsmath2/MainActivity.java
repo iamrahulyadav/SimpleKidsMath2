@@ -77,6 +77,11 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        m_clist=ChildrenList.getInstance();
+        m_clist.setContext(this);
+        m_clist.LoadData();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -88,6 +93,7 @@ public class MainActivity extends AppCompatActivity
                         .setAction("Action", null).show();
             }
         });
+        FindViews();
         m_clistPresentor=new ChildrenListPresentor(this);
         CreateCList();
 
@@ -118,7 +124,7 @@ public class MainActivity extends AppCompatActivity
         }
 
 
-        FindViews();
+
 
         if (savedInstanceState!=null)
         {
@@ -177,6 +183,9 @@ public class MainActivity extends AppCompatActivity
         //replaces the default 'Back' button action
         if(keyCode==KeyEvent.KEYCODE_ENTER)
         {
+            if (etResult.getText().toString().length()<=0){
+                return false;
+            }
             if (!answerWaitFlag){
                 return false;
             }
@@ -202,6 +211,10 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
+
+            if (etResult.getText().toString().length()<=0){
+                return false;
+            }
 
             if (!answerWaitFlag) {
                 return true;
@@ -250,9 +263,9 @@ public class MainActivity extends AppCompatActivity
         tvop=findViewById(R.id.textViewSign);
         etResult=findViewById(R.id.editTextRes);
 
-        ivgood=(ImageView) findViewById(R.id.imageButtonGood);
-        ivgood.setVisibility(View.GONE);
+        ivgood= findViewById(R.id.imageButtonGood);
         ivbad = findViewById(R.id.imageButtonBad);
+        ivgood.setVisibility(View.GONE);
         ivbad.setVisibility(View.GONE);
         tvop.setText("+");
 
@@ -263,6 +276,9 @@ public class MainActivity extends AppCompatActivity
 
     public void InitRound()
     {
+        ivgood.setVisibility(View.GONE);
+        ivbad.setVisibility(View.GONE);
+
         m_clist=ChildrenList.getInstance();
         m_clist.setContext(this);
         m_selectedChild=null;
@@ -270,8 +286,6 @@ public class MainActivity extends AppCompatActivity
         int nOp=InitRoundHelperAction();
 
         answerWaitFlag = false;
-        ivgood.setVisibility(View.GONE);
-        ivbad.setVisibility(View.GONE);
 
         m_clist.setContext(this);
         Child child = m_clist.getSelectedChild();
@@ -279,8 +293,7 @@ public class MainActivity extends AppCompatActivity
             child = new Child("dummy");
         }
 
-        ivgood.setVisibility(View.GONE);
-        ivbad.setVisibility(View.GONE);
+
         Random r = new Random(new Date().getTime());
 
         Integer n1start=m_selectedChild.getMinparam();
@@ -431,7 +444,17 @@ public class MainActivity extends AppCompatActivity
         finally {
             inAnswerDelay=false;
             answerWaitFlag=false;
-            InitRound();
+
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    //Do something after 100ms
+                    InitRound();
+                }
+            }, 2000);
+
+
         }
     }
     // Display Good result Sign
