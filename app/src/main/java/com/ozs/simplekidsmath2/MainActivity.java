@@ -1,24 +1,16 @@
 package com.ozs.simplekidsmath2;
 
 import android.Manifest;
-import android.app.Instrumentation;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PersistableBundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -39,9 +31,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
+
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
+import java.util.TimeZone;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -72,6 +66,11 @@ public class MainActivity extends AppCompatActivity
     EditText etResult;
     Boolean  answerWaitFlag=false;
     Boolean  inAnswerDelay=false;
+    Thread   myThread = null;
+    Date     Startdt  = new Date();
+    Long     waitedSec=0L;
+    boolean  bmyThreadStop=false;
+    long     utcOffset=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,14 +84,6 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
         FindViews();
         m_clistPresentor=new ChildrenListPresentor(this);
         CreateCList();
@@ -123,9 +114,6 @@ public class MainActivity extends AppCompatActivity
             return;
         }
 
-
-
-
         if (savedInstanceState!=null)
         {
             tv1.setText(savedInstanceState.getString(FIRST_PARAM,"0"));
@@ -140,7 +128,6 @@ public class MainActivity extends AppCompatActivity
                 InitRound();
             }
         });
-
 
         EditText etResult=(EditText) findViewById(R.id.editTextRes);
 
@@ -338,6 +325,28 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         }
+        // case of /
+        if (nOp==4) {
+
+            if (n2 > n1) {
+                int nt = n1;
+                n1 = n2;
+                n2 = nt;
+            }
+            n2=(n2==0)?1:n2;
+            int res = n1 / n2;
+            if (n1 % n2 !=0) {
+               n1=Math.abs(n1);
+               n2=Math.abs(n2);
+                if (n2 > n1) {
+                    int nt = n1;
+                    n1 = n2;
+                    n2 = nt;
+                }
+                n1=n1-(n1 % n2);
+            }
+
+        }
 
         tvop.setText(strOp);
         tv1.setText(n1.toString());
@@ -345,7 +354,21 @@ public class MainActivity extends AppCompatActivity
         etResult.setText("");
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(etResult, InputMethodManager.SHOW_IMPLICIT);
+
+
+        //calac UTC Offset
         answerWaitFlag=true;
+        TimeZone tz = TimeZone.getDefault();
+        Date now = new Date();
+        utcOffset = tz.getOffset(now.getTime());
+
+        // Start Thread
+        Startdt  = new Date();
+        waitedSec=0L;
+        bmyThreadStop=false;
+        Runnable myRunnableThread = new CountDownRunner();
+        myThread= new Thread(myRunnableThread);
+        myThread.start();
     }
 
     protected int InitRoundHelperAction(){
@@ -373,7 +396,7 @@ public class MainActivity extends AppCompatActivity
             }
         }
         Random r = new Random(new Date().getTime());
-        Integer n1=r.nextInt(num-1);
+        Integer n1=r.nextInt(num);
         int num2 = -1;
         for(int i=0;i<4;i++)
         {
@@ -390,6 +413,11 @@ public class MainActivity extends AppCompatActivity
 
     protected void CheckResults(){
 
+
+        if (myThread!=null)
+        {
+            bmyThreadStop=true;
+        }
         int n1=Integer.parseInt(tv1.getText().toString());
         int n2=Integer.parseInt(tv2.getText().toString());
 
@@ -455,6 +483,41 @@ public class MainActivity extends AppCompatActivity
             }, 2000);
 
 
+        }
+    }
+
+    public void doWork() {
+        runOnUiThread(new Runnable() {
+            public void run() {
+                try{
+                    SimpleDateFormat fmt = new SimpleDateFormat("kk:mm:ss");
+                    TextView txtCurrentTime= (TextView)findViewById(R.id.textseconds);
+                    Date dt = new Date();
+                    Long diff1=(dt.getTime() - Startdt.getTime());
+                    Long diff2= diff1 / 1000;
+
+                    waitedSec=diff2;
+                    Date dtTemp=new Date();
+                    dtTemp.setTime(diff1-utcOffset);
+                    String strDisplayTime=fmt.format(dtTemp);
+                    //String curSec =  diff.toString();
+                    txtCurrentTime.setText(strDisplayTime);
+                }catch (Exception e) {}
+            }
+        });
+    }
+    class CountDownRunner implements Runnable{
+        // @Override
+        public void run() {
+            while((!Thread.currentThread().isInterrupted())&&(!bmyThreadStop)){
+                try {
+                    doWork();
+                    Thread.sleep(1000); // Pause of 1 Second
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }catch(Exception e){
+                }
+            }
         }
     }
     // Display Good result Sign
@@ -604,9 +667,6 @@ public class MainActivity extends AppCompatActivity
             Intent foo=new Intent(MainActivity.this,OptionsActivity.class);
             startActivityForResult(foo, OPTION_REQUEST);
 
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
 
         } else {
             Integer startCustomMenu=m_clist.GetMinMenuId();
@@ -631,11 +691,13 @@ public class MainActivity extends AppCompatActivity
         TextView nav_user = hView.findViewById(R.id.userName);
         nav_user.setText(child.getName());
         ImageButton ib= hView.findViewById(R.id.imageButton);
+        ImageView ibMain= findViewById(R.id.imageViewMain);
 
         if (ib==null) {
             return;
         }
         m_clistPresentor.AssignImageToImageButton(ib,child.getImgName());
+        m_clistPresentor.AssignImageToImageView(ibMain,child.getImgName());
 
         CreateCList();
         m_clist.setSelectedChild(child);

@@ -26,5 +26,6 @@
     <string name="option_error_invalidint">Invalid Integers</string>
     <string name="option_error_minusparams">Minus values not allowed when allow minus is unchecked</string>
     <string name="option_error_fromltto">Min value must be lowered than max value</string>
+    <string name="lbl_textseconds">Sec.:</string>
 
 </resources>
