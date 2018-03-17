@@ -490,18 +490,12 @@ public class MainActivity extends AppCompatActivity
         runOnUiThread(new Runnable() {
             public void run() {
                 try{
-                    SimpleDateFormat fmt = new SimpleDateFormat("kk:mm:ss");
-                    TextView txtCurrentTime= (TextView)findViewById(R.id.textseconds);
+                    TextView txtCurrentTime = findViewById(R.id.textseconds);
                     Date dt = new Date();
                     Long diff1=(dt.getTime() - Startdt.getTime());
                     Long diff2= diff1 / 1000;
-
                     waitedSec=diff2;
-                    Date dtTemp=new Date();
-                    dtTemp.setTime(diff1-utcOffset);
-                    String strDisplayTime=fmt.format(dtTemp);
-                    //String curSec =  diff.toString();
-                    txtCurrentTime.setText(strDisplayTime);
+                    txtCurrentTime.setText(diff2.toString());
                 }catch (Exception e) {}
             }
         });
