@@ -92,6 +92,7 @@ public class CropImageActivity extends AppCompatActivity
               : getResources().getString(R.string.crop_image_activity_title);
       actionBar.setTitle(title);
       actionBar.setDisplayHomeAsUpEnabled(true);
+      //actionBar.setIcon(R.drawable.hic_crop);
     }
   }
 
