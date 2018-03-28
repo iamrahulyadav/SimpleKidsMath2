@@ -6,7 +6,6 @@ apply plugin: 'maven-publish'
 android {
 
     compileSdkVersion rootProject.compileSdkVersion
-    buildToolsVersion rootProject.buildToolsVersion
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion rootProject.compileSdkVersion
@@ -20,6 +19,7 @@ android {
     lintOptions {
         abortOnError false
     }
+    buildToolsVersion '27.0.3'
 }
 
 // This configuration is used to publish the library to a local repo while a being forked and modified.
