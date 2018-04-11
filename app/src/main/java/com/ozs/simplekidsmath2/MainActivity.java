@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity
                         //Do something after 100ms
                         CheckResults();
                     }
-                }, 2000);
+                }, 1000);
 
             }
 
@@ -517,13 +517,13 @@ public class MainActivity extends AppCompatActivity
     // Display Good result Sign
     protected void GoodSign(){
         // Display animation
-        ivgood.setVisibility(View.VISIBLE);
+
         startAnimation(true);
     }
 
     // Display Bad Result Sign
     protected void BadSign(){
-        ivbad.setVisibility(View.VISIBLE);
+
         startAnimation(false);
     }
 
@@ -741,17 +741,6 @@ public class MainActivity extends AppCompatActivity
         {
             aniView=findViewById(R.id.imageButtonBad);
         }
-		/*
-		float dest = 0;
-		dest = 360;
-	    if (aniView.getRotation() == 360) {
-	       System.out.println(aniView.getAlpha());
-	       dest = 0;
-	    }
-	    ObjectAnimator animation1 = ObjectAnimator.ofFloat(aniView,
-	        "rotation", dest);
-	    animation1.setDuration(2000);
-	    */
 
         int animResource=R.anim.push_left_in;
         Random rndGen=new Random();
@@ -806,6 +795,7 @@ public class MainActivity extends AppCompatActivity
                 ivbad.setVisibility(View.GONE);
             }
         });
+        aniView.setVisibility(View.VISIBLE);
         aniView.startAnimation(animation1);
         //animation1.start();
     }

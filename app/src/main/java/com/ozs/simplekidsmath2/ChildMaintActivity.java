@@ -243,7 +243,7 @@ public class ChildMaintActivity extends AppCompatActivity {
                 .setCropShape(CropImageView.CropShape.RECTANGLE)
                 .setCropMenuCropButtonTitle("Done")
                 .setRequestedSize(300, 300)
-                .setCropMenuCropButtonIcon(R.mipmap.ic_launcher)
+                .setCropMenuCropButtonIcon(R.mipmap.hic)
                 .start(this);
     }
     public void onDeleteChildClick(View view){
