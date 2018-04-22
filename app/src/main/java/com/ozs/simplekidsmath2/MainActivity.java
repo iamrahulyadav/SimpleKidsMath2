@@ -3,6 +3,7 @@ package com.ozs.simplekidsmath2;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,6 +25,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -64,8 +66,6 @@ public class MainActivity extends AppCompatActivity
     TextView tv2;
     TextView tvop;
     EditText etResult;
-    Boolean  answerWaitFlag=false;
-    Boolean  inAnswerDelay=false;
     Thread   myThread = null;
     Date     Startdt  = new Date();
     Long     waitedSec=0L;
@@ -129,7 +129,22 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        EditText etResult=(EditText) findViewById(R.id.editTextRes);
+        EditText etResult= findViewById(R.id.editTextRes);
+
+
+        etResult.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if ((actionId & EditorInfo.IME_MASK_ACTION) != 0) {
+                    CheckResults();
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+        });
+
 
         etResult.addTextChangedListener(new TextWatcher() {
             @Override
@@ -138,6 +153,7 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                /*
                 if (!answerWaitFlag){
                     return;
                 }
@@ -154,7 +170,7 @@ public class MainActivity extends AppCompatActivity
                         CheckResults();
                     }
                 }, 1000);
-
+                */
             }
 
             @Override
@@ -170,60 +186,10 @@ public class MainActivity extends AppCompatActivity
         //replaces the default 'Back' button action
         if(keyCode==KeyEvent.KEYCODE_ENTER)
         {
-            if (etResult.getText().toString().length()<=0){
-                return false;
-            }
-            if (!answerWaitFlag){
-                return false;
-            }
-
-            if (inAnswerDelay) {
-                return false;
-            }
-
-            final Handler handler = new Handler();
-            inAnswerDelay=true;
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    //Do something after 100ms
-                    CheckResults();
-                }
-            }, 250);
+           CheckResults();
         }
         return true;
     }
-
-    private View.OnTouchListener handleTouch = new View.OnTouchListener() {
-
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-
-            if (etResult.getText().toString().length()<=0){
-                return false;
-            }
-
-            if (!answerWaitFlag) {
-                return true;
-            }
-
-            if (inAnswerDelay) {
-                return true;
-            }
-
-            final Handler handler = new Handler();
-            inAnswerDelay = true;
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    //Do something after 100ms
-                    CheckResults();
-                }
-            }, 250);
-
-            return true;
-        }
-    };
 
     protected void CreateCList(){
         m_clist=ChildrenList.getInstance();
@@ -256,8 +222,6 @@ public class MainActivity extends AppCompatActivity
         ivbad.setVisibility(View.GONE);
         tvop.setText("+");
 
-        View v=findViewById(R.id.activity_main);
-        v.setOnTouchListener(handleTouch);
     }
 
 
@@ -272,7 +236,6 @@ public class MainActivity extends AppCompatActivity
         m_selectedChild=m_clist.getSelectedChild();
         int nOp=InitRoundHelperAction();
 
-        answerWaitFlag = false;
 
         m_clist.setContext(this);
         Child child = m_clist.getSelectedChild();
@@ -357,7 +320,7 @@ public class MainActivity extends AppCompatActivity
 
 
         //calac UTC Offset
-        answerWaitFlag=true;
+
         TimeZone tz = TimeZone.getDefault();
         Date now = new Date();
         utcOffset = tz.getOffset(now.getTime());
@@ -470,14 +433,15 @@ public class MainActivity extends AppCompatActivity
         {
         }
         finally {
-            inAnswerDelay=false;
-            answerWaitFlag=false;
+
 
             final Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     //Do something after 100ms
+                    ivgood.setVisibility(View.GONE);
+                    ivbad.setVisibility(View.GONE);
                     InitRound();
                 }
             }, 2000);
@@ -683,6 +647,14 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         View hView =  navigationView.getHeaderView(0);
         TextView nav_user = hView.findViewById(R.id.userName);
+        TextView nav_ver  = hView.findViewById(R.id.ver);
+        try {
+            PackageInfo pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
+            String version = pInfo.versionName;
+            nav_ver.setText(version);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
         nav_user.setText(child.getName());
         ImageButton ib= hView.findViewById(R.id.imageButton);
         ImageView ibMain= findViewById(R.id.imageViewMain);
@@ -733,14 +705,19 @@ public class MainActivity extends AppCompatActivity
     {
 
         ImageView aniView;
+        ImageView oppView;
         if (isGoodAnswer)
         {
             aniView=findViewById(R.id.imageButtonGood);
+            oppView=findViewById(R.id.imageButtonBad);
         }
         else
         {
             aniView=findViewById(R.id.imageButtonBad);
+            oppView=findViewById(R.id.imageButtonGood);
         }
+        oppView.setVisibility(View.INVISIBLE);
+        oppView.setVisibility(View.GONE);
 
         int animResource=R.anim.push_left_in;
         Random rndGen=new Random();
@@ -774,13 +751,12 @@ public class MainActivity extends AppCompatActivity
                 break;
         }
 
-
         //load an animation from XML
-        Animation animation1 = AnimationUtils.loadAnimation(this,animResource);
-        // animation1.setAnimationListener(this);
-        animation1.setDuration(2000);
+        //Animation animation1 = AnimationUtils.loadAnimation(this,animResource);
+        //animation1.setAnimationListener(this);
+        //animation1.setDuration(2000);
 
-        animation1.setAnimationListener(new Animation.AnimationListener(){
+        /* animation1.setAnimationListener(new Animation.AnimationListener(){
             @Override
             public void onAnimationStart(Animation arg0) {
             }
@@ -795,8 +771,11 @@ public class MainActivity extends AppCompatActivity
                 ivbad.setVisibility(View.GONE);
             }
         });
+        */
         aniView.setVisibility(View.VISIBLE);
-        aniView.startAnimation(animation1);
+        //aniView.startAnimation(animation1);
         //animation1.start();
+
+
     }
 }
