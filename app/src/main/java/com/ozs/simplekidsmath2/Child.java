@@ -18,6 +18,8 @@ public class Child {
     private Integer  menuId;
     private Integer  minparam=1;
     private Integer  maxparam=20;
+    private Integer  minparamdiv=1;
+    private Integer  maxparamdiv=20;
     private Integer  addNo=0;
     private Integer  subNo=0;
     private Integer  multNo=0;
@@ -266,5 +268,21 @@ public class Child {
 
     public void setAllowMinusResult(Boolean allowMinusResult) {
         isAllowMinusResult = allowMinusResult;
+    }
+
+    public Integer getMinparamdiv() {
+        return minparamdiv;
+    }
+
+    public void setMinparamdiv(Integer minparamdiv) {
+        this.minparamdiv = minparamdiv;
+    }
+
+    public Integer getMaxparamdiv() {
+        return maxparamdiv;
+    }
+
+    public void setMaxparamdiv(Integer maxparamdiv) {
+        this.maxparamdiv = maxparamdiv;
     }
 }

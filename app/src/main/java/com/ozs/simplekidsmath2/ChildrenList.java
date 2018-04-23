@@ -108,6 +108,9 @@ public class ChildrenList {
 
                 Element minparamx = doc.createElement("minParam");
                 Element maxparamx=doc.createElement("maxParam");
+                Element minparamdivx = doc.createElement("minParamdiv");
+                Element maxparamdivx=doc.createElement("maxParamdiv");
+
 
                 Element addNox = doc.createElement("addNo");
                 Element subNox=doc.createElement("subNo");
@@ -132,6 +135,8 @@ public class ChildrenList {
 
                 minparamx.appendChild(doc.createTextNode(child.getMinparam().toString()));
                 maxparamx.appendChild(doc.createTextNode(child.getMaxparam().toString()));
+                minparamdivx.appendChild(doc.createTextNode(child.getMinparam().toString()));
+                maxparamdivx.appendChild(doc.createTextNode(child.getMaxparam().toString()));
 
                 childidx.appendChild(doc.createTextNode(child.getChildId()));
                 namex.appendChild(doc.createTextNode(child.getName()));
@@ -306,6 +311,20 @@ public class ChildrenList {
 
                             String minparam=eChild.getElementsByTagName("minParam").item(0).getTextContent();
                             String maxparam=eChild.getElementsByTagName("maxParam").item(0).getTextContent();
+                            NodeList nlminparamdiv=eChild.getElementsByTagName("minParamdiv");
+                            if (nlminparamdiv==null) {
+                               eChild.appendChild(doc.createElement("minParamdiv"));
+                                Element x1=(Element) eChild.appendChild(doc.createElement("minParamdiv"));
+                                x1.appendChild(doc.createTextNode(minparam));
+
+                            }
+                            NodeList nlmaxparamdiv=eChild.getElementsByTagName("maxParamdiv");
+                            if (nlmaxparamdiv==null) {
+                                Element x2=(Element) eChild.appendChild(doc.createElement("maxParamdiv"));
+                                x2.appendChild(doc.createTextNode(maxparam));
+                            }
+                            String minparamdiv=eChild.getElementsByTagName("minParamdiv").item(0).getTextContent();
+                            String maxparamdiv=eChild.getElementsByTagName("maxParamdiv").item(0).getTextContent();
 
 
                             String addNo=eChild.getElementsByTagName("addNo").item(0).getTextContent();
@@ -340,6 +359,8 @@ public class ChildrenList {
 
                             child.setMinparam(Integer.parseInt(minparam));
                             child.setMaxparam(Integer.parseInt(maxparam));
+                            child.setMinparamdiv(Integer.parseInt(minparamdiv));
+                            child.setMaxparamdiv(Integer.parseInt(maxparamdiv));
 
                             child.setAddNo(Integer.parseInt(addNo));
                             child.setSubNo(Integer.parseInt(subNo));
