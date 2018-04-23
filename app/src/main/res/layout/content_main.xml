@@ -101,26 +101,28 @@
             android:imeOptions="actionDone"
             android:id="@+id/editTextRes" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:orientation="vertical"
-        android:paddingTop="20dp"
-        android:layout_height="wrap_content">
+        android:paddingTop="20dp">
 
         <ImageView
             android:id="@+id/imageButtonBad"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            app:srcCompat="@drawable/signx"
+            android:layout_gravity="center_horizontal"
+            app:srcCompat="@drawable/bad_answer"
             tools:layout_width="wrap_content" />
 
         <ImageView
             android:id="@+id/imageButtonGood"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            app:srcCompat="@drawable/signv"
+            android:layout_gravity="center_horizontal"
+            app:srcCompat="@drawable/good_answer"
             tools:layout_width="wrap_content" />
     </LinearLayout>
 

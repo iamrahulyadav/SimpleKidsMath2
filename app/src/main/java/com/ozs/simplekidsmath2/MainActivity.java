@@ -1,10 +1,13 @@
 package com.ozs.simplekidsmath2;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PersistableBundle;
@@ -71,12 +74,42 @@ public class MainActivity extends AppCompatActivity
     Long     waitedSec=0L;
     boolean  bmyThreadStop=false;
     long     utcOffset=0;
+    int      animResource=R.anim.push_left_in;
+    ImageView aniView;
+    ImageView oppView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if (savedInstanceState!=null)
+        {
+            tv1.setText(savedInstanceState.getString(FIRST_PARAM,"0"));
+            tv2.setText(savedInstanceState.getString(SECOND_PARAM,"0"));
+            tvop.setText(savedInstanceState.getString(OPERATOR_PARAM,"+"));
+        }
+
+        /* ------------------------------------------ */
+        /* Permissions                                */
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED )
+        {
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]{Manifest.permission.CAMERA,
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    },
+                    11);
+            return;
+        }
+        /* ------------------------------------------ */
+        Init();
+    }
+
+    public void Init(){
         m_clist=ChildrenList.getInstance();
         m_clist.setContext(this);
         m_clist.LoadData();
@@ -99,27 +132,6 @@ public class MainActivity extends AppCompatActivity
         Menu menu = navigationView.getMenu();
         menu.add(R.id.referrer_group, 121, Menu.NONE, "Add Child");
         SetCustomMenu();
-
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED )
-        {
-            ActivityCompat.requestPermissions(MainActivity.this,
-                    new String[]{Manifest.permission.CAMERA,
-                            Manifest.permission.READ_EXTERNAL_STORAGE,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    },
-                    11);
-            return;
-        }
-
-        if (savedInstanceState!=null)
-        {
-            tv1.setText(savedInstanceState.getString(FIRST_PARAM,"0"));
-            tv2.setText(savedInstanceState.getString(SECOND_PARAM,"0"));
-            tvop.setText(savedInstanceState.getString(OPERATOR_PARAM,"+"));
-        }
 
         ImageButton ibGen=(ImageButton) findViewById(R.id.imageButtonGen);
         ibGen.setOnClickListener(new View.OnClickListener() {
@@ -178,8 +190,11 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
+
         InitRound();
+
     }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)
     {
@@ -433,8 +448,30 @@ public class MainActivity extends AppCompatActivity
         {
         }
         finally {
+            //load an animation from XML
+            Animation animation1 = AnimationUtils.loadAnimation(this,animResource);
+            animation1.setDuration(1500);
 
+         animation1.setAnimationListener(new Animation.AnimationListener(){
+            @Override
+            public void onAnimationStart(Animation arg0) {
+            }
+            @Override
+            public void onAnimationRepeat(Animation arg0) {
+            }
+            @Override
+            public void onAnimationEnd(Animation arg0) {
+                // Bail out to next screen
+                // --> Move to next questio NextPrevQ("Next");
+                ivgood.setVisibility(View.GONE);
+                ivbad.setVisibility(View.GONE);
+                InitRound();
+            }
+        });
 
+            aniView.startAnimation(animation1);
+            animation1.start();
+            /*
             final Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
@@ -445,8 +482,7 @@ public class MainActivity extends AppCompatActivity
                     InitRound();
                 }
             }, 2000);
-
-
+            */
         }
     }
 
@@ -495,11 +531,15 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
 
+        if (!(ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED )) {
 
-        // Select Current Child
-        Child child=m_clist.getSelectedChild();
-        if (child!=null){
-            SwitchChild(child);
+            // Select Current Child
+            Child child = m_clist.getSelectedChild();
+            if (child != null) {
+                SwitchChild(child);
+            }
         }
     }
 
@@ -551,14 +591,44 @@ public class MainActivity extends AppCompatActivity
                     && grantResults[1] == PackageManager.PERMISSION_GRANTED
                     && grantResults[2] == PackageManager.PERMISSION_GRANTED
                     ){
-                return;
+                Init();
+                // Select Current Child
+                Child child = m_clist.getSelectedChild();
+                if (child != null) {
+                    SwitchChild(child);
+                }
 
             } else {
 
                 // permission denied, boo! Disable the
                 // functionality that depends on this permission.
-            }
+                AlertDialog.Builder builder;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+                } else {
+                    builder = new AlertDialog.Builder(this);
+                }
+                builder.setTitle("Missing Permissions")
+                        .setMessage("Application Can not work without the requested permissions, Quit ?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                ActivityCompat.requestPermissions(MainActivity.this,
+                                        new String[]{Manifest.permission.CAMERA,
+                                                Manifest.permission.READ_EXTERNAL_STORAGE,
+                                                Manifest.permission.WRITE_EXTERNAL_STORAGE
+                                        },
+                                        11);
 
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+            }
             return;
         }
     }
@@ -577,7 +647,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        // getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
@@ -704,8 +774,6 @@ public class MainActivity extends AppCompatActivity
     public void startAnimation(boolean isGoodAnswer)
     {
 
-        ImageView aniView;
-        ImageView oppView;
         if (isGoodAnswer)
         {
             aniView=findViewById(R.id.imageButtonGood);
@@ -719,7 +787,7 @@ public class MainActivity extends AppCompatActivity
         oppView.setVisibility(View.INVISIBLE);
         oppView.setVisibility(View.GONE);
 
-        int animResource=R.anim.push_left_in;
+        animResource=R.anim.push_left_in;
         Random rndGen=new Random();
         int nRandInt=rndGen.nextInt(63);
         nRandInt = nRandInt % 7;
