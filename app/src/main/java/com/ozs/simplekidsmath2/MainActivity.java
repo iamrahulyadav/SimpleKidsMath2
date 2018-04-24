@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity
     int      animResource=R.anim.push_left_in;
     ImageView aniView;
     ImageView oppView;
+    boolean   inAnimation=false;
 
 
     @Override
@@ -148,7 +149,9 @@ public class MainActivity extends AppCompatActivity
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if ((actionId & EditorInfo.IME_MASK_ACTION) != 0) {
-                    CheckResults();
+                    if (! inAnimation) {
+                        CheckResults();
+                    }
                     return true;
                 }
                 else {
@@ -201,9 +204,12 @@ public class MainActivity extends AppCompatActivity
         //replaces the default 'Back' button action
         if(keyCode==KeyEvent.KEYCODE_ENTER)
         {
-           CheckResults();
+           if (! inAnimation) {
+               CheckResults();
+           }
+           return true;
         }
-        return true;
+        return super.onKeyDown(keyCode, event);
     }
 
     protected void CreateCList(){
@@ -396,6 +402,7 @@ public class MainActivity extends AppCompatActivity
         {
             bmyThreadStop=true;
         }
+        inAnimation=true;
         int n1=Integer.parseInt(tv1.getText().toString());
         int n2=Integer.parseInt(tv2.getText().toString());
 
@@ -455,6 +462,7 @@ public class MainActivity extends AppCompatActivity
          animation1.setAnimationListener(new Animation.AnimationListener(){
             @Override
             public void onAnimationStart(Animation arg0) {
+                inAnimation=true;
             }
             @Override
             public void onAnimationRepeat(Animation arg0) {
@@ -466,6 +474,7 @@ public class MainActivity extends AppCompatActivity
                 ivgood.setVisibility(View.GONE);
                 ivbad.setVisibility(View.GONE);
                 InitRound();
+                inAnimation=false;
             }
         });
 
@@ -540,6 +549,9 @@ public class MainActivity extends AppCompatActivity
             if (child != null) {
                 SwitchChild(child);
             }
+            ivgood.setVisibility(View.GONE);
+            ivbad.setVisibility(View.GONE);
+
         }
     }
 
@@ -776,15 +788,14 @@ public class MainActivity extends AppCompatActivity
 
         if (isGoodAnswer)
         {
-            aniView=findViewById(R.id.imageButtonGood);
-            oppView=findViewById(R.id.imageButtonBad);
+            aniView=ivgood;
+            oppView=ivbad;
         }
         else
         {
-            aniView=findViewById(R.id.imageButtonBad);
-            oppView=findViewById(R.id.imageButtonGood);
+            aniView=ivbad;
+            oppView=ivgood;
         }
-        oppView.setVisibility(View.INVISIBLE);
         oppView.setVisibility(View.GONE);
 
         animResource=R.anim.push_left_in;
@@ -818,31 +829,7 @@ public class MainActivity extends AppCompatActivity
                 animResource=R.anim.push_left_in;
                 break;
         }
-
-        //load an animation from XML
-        //Animation animation1 = AnimationUtils.loadAnimation(this,animResource);
-        //animation1.setAnimationListener(this);
-        //animation1.setDuration(2000);
-
-        /* animation1.setAnimationListener(new Animation.AnimationListener(){
-            @Override
-            public void onAnimationStart(Animation arg0) {
-            }
-            @Override
-            public void onAnimationRepeat(Animation arg0) {
-            }
-            @Override
-            public void onAnimationEnd(Animation arg0) {
-                // Bail out to next screen
-                // --> Move to next questio NextPrevQ("Next");
-                ivgood.setVisibility(View.GONE);
-                ivbad.setVisibility(View.GONE);
-            }
-        });
-        */
         aniView.setVisibility(View.VISIBLE);
-        //aniView.startAnimation(animation1);
-        //animation1.start();
 
 
     }
