@@ -20,6 +20,8 @@ public class Child {
     private Integer  maxparam=20;
     private Integer  minparamdiv=1;
     private Integer  maxparamdiv=20;
+    private Integer  minparammult=1;
+    private Integer  maxparammult=20;
     private Integer  addNo=0;
     private Integer  subNo=0;
     private Integer  multNo=0;
@@ -284,5 +286,21 @@ public class Child {
 
     public void setMaxparamdiv(Integer maxparamdiv) {
         this.maxparamdiv = maxparamdiv;
+    }
+
+    public Integer getMinparammult() {
+        return minparammult;
+    }
+
+    public void setMinparammult(Integer minparammult) {
+        this.minparammult = minparammult;
+    }
+
+    public Integer getMaxparammult() {
+        return maxparammult;
+    }
+
+    public void setMaxparammult(Integer maxparammult) {
+        this.maxparammult = maxparammult;
     }
 }

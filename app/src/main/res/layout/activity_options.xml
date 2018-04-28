@@ -20,7 +20,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:inputType="number"
         android:text=""
         android:hint="@string/hint_min_value"
         app:layout_constraintBaseline_toBaselineOf="@id/textViewMin"
@@ -42,11 +42,99 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:inputType="number"
         android:text=""
         android:hint="@string/hint_max_value"
         app:layout_constraintBaseline_toBaselineOf="@id/textViewMax"
         app:layout_constraintLeft_toRightOf="@id/textViewMax"
+        android:layout_margin="10dp" />
+
+    <TextView
+        android:id="@+id/textViewMinMult"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/lbl_minmult_value"
+        app:layout_constraintTop_toBottomOf="@id/textViewMax"
+        app:layout_constraintStart_toStartOf="parent"
+        android:paddingTop="15dp"
+        android:layout_margin="10dp"  />
+
+    <EditText
+        android:id="@+id/editTextMinMult"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="number"
+        android:text=""
+        android:hint="@string/hint_minmult_value"
+        app:layout_constraintBaseline_toBaselineOf="@id/textViewMinMult"
+        app:layout_constraintLeft_toRightOf="@id/textViewMinMult"
+        android:layout_margin="10dp" />
+
+    <TextView
+        android:id="@+id/textViewMaxMult"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/lbl_maxmult_value"
+        android:paddingTop="15dp"
+        app:layout_constraintTop_toBottomOf="@id/textViewMinMult"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_margin="10dp"  />
+
+    <EditText
+        android:id="@+id/editTextMaxMult"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="number"
+        android:text=""
+        android:hint="@string/hint_maxmult_value"
+        app:layout_constraintBaseline_toBaselineOf="@id/textViewMaxMult"
+        app:layout_constraintLeft_toRightOf="@id/textViewMaxMult"
+        android:layout_margin="10dp" />
+
+    <TextView
+        android:id="@+id/textViewMinDiv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/lbl_mindiv_value"
+        app:layout_constraintTop_toBottomOf="@id/textViewMaxMult"
+        app:layout_constraintStart_toStartOf="parent"
+        android:paddingTop="15dp"
+        android:layout_margin="10dp"  />
+
+    <EditText
+        android:id="@+id/editTextMinDiv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="number"
+        android:text=""
+        android:hint="@string/hint_mindiv_value"
+        app:layout_constraintBaseline_toBaselineOf="@id/textViewMinDiv"
+        app:layout_constraintLeft_toRightOf="@id/textViewMinDiv"
+        android:layout_margin="10dp" />
+
+    <TextView
+        android:id="@+id/textViewMaxDiv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/lbl_maxdiv_value"
+        android:paddingTop="15dp"
+        app:layout_constraintTop_toBottomOf="@id/textViewMinDiv"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_margin="10dp"  />
+
+    <EditText
+        android:id="@+id/editTextMaxDiv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="number"
+        android:text=""
+        android:hint="@string/hint_maxdiv_value"
+        app:layout_constraintBaseline_toBaselineOf="@id/textViewMaxDiv"
+        app:layout_constraintLeft_toRightOf="@id/textViewMaxDiv"
         android:layout_margin="10dp" />
 
     <CheckBox
@@ -54,9 +142,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/lbl_add"
-        app:layout_constraintTop_toBottomOf="@id/textViewMax"
+        app:layout_constraintTop_toBottomOf="@id/textViewMaxDiv"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_margin="10dp"/>
+        android:layout_margin="5dp"/>
 
     <CheckBox
         android:id="@+id/checkBoxSub"
@@ -65,7 +153,7 @@
         android:text="@string/lbl_sub"
         app:layout_constraintTop_toBottomOf="@id/checkBoxAdd"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_margin="10dp" />
+        android:layout_margin="5dp" />
 
     <CheckBox
         android:id="@+id/checkBoxMult"
@@ -74,7 +162,7 @@
         android:text="@string/lbl_mult"
         app:layout_constraintTop_toBottomOf="@id/checkBoxSub"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_margin="10dp" />
+        android:layout_margin="5dp" />
 
     <CheckBox
         android:id="@+id/checkBoxDiv"
@@ -83,7 +171,7 @@
         android:text="@string/lbl_div"
         app:layout_constraintTop_toBottomOf="@id/checkBoxMult"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_margin="10dp" />
+        android:layout_margin="5dp" />
 
     <CheckBox
         android:id="@+id/checkAllowMinus"
@@ -92,7 +180,7 @@
         android:text="@string/lbl_allow_minus"
         app:layout_constraintTop_toBottomOf="@id/checkBoxDiv"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_margin="10dp" />
+        android:layout_margin="5dp" />
 
     <TextView
         android:id="@+id/optionsErrorMsg2"
@@ -100,7 +188,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/checkAllowMinus"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_margin="10dp"    />
+        android:layout_margin="5dp"    />
 
 
 </android.support.constraint.ConstraintLayout>

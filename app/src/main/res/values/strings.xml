@@ -11,10 +11,24 @@
     <string name="main_button_select_image">Select Image</string>
     <string name="main_activity_desciption">Sample activity to start image cropping.\nExample: User profile activity to select avatar.</string>
 
-    <string name="lbl_min_value">Min:</string>
-    <string name="lbl_max_value">Max:</string>
-    <string name="hint_min_value">Min Value</string>
-    <string name="hint_max_value">Max Value</string>
+    <string name="lbl_min_value">Min Add:</string>
+    <string name="lbl_max_value">Max Add:</string>
+    <string name="hint_min_value">Min Add. Value</string>
+    <string name="hint_max_value">Max Add.Value</string>
+
+    <string name="lbl_minmult_value">Min Mult:</string>
+    <string name="lbl_maxmult_value">Max Mult:</string>
+    <string name="hint_minmult_value">Min Mult. Value</string>
+    <string name="hint_maxmult_value">Max Mult. Value</string>
+
+
+    <string name="lbl_mindiv_value">Min Div:</string>
+    <string name="lbl_maxdiv_value">Max Div:</string>
+    <string name="hint_mindiv_value">Min div. Value</string>
+    <string name="hint_maxdiv_value">Max div. Value</string>
+
+
+
 
     <string name="lbl_add">Addition</string>
     <string name="lbl_sub">Subtraction</string>
@@ -27,5 +41,6 @@
     <string name="option_error_minusparams">Minus values not allowed when allow minus is unchecked</string>
     <string name="option_error_fromltto">Min value must be lowered than max value</string>
     <string name="lbl_textseconds">Sec.:</string>
+    <string name="lbl_try_again">Try again ?</string>
 
 </resources>

@@ -18,6 +18,11 @@ public class OptionsActivity extends AppCompatActivity {
 
     private static final String STATE_MIN="STATE_MIN";
     private static final String STATE_MAX="STATE_MAX";
+    private static final String STATE_MINMULT="STATE_MINMULT";
+    private static final String STATE_MAXMULT="STATE_MAXMULT";
+    private static final String STATE_MINDIV="STATE_MINDIV";
+    private static final String STATE_MAXDIV="STATE_MAXDIV";
+
     private static final String STATE_ISADD="STATE_ISADD";
     private static final String STATE_ISSUB="STATE_ISSUB";
     private static final String STATE_ISMULT="STATE_ISMULT";
@@ -28,6 +33,10 @@ public class OptionsActivity extends AppCompatActivity {
     Child selectedChild;
     EditText etMinValue;
     EditText etMaxValue;
+    EditText etMinValueMult;
+    EditText etMaxValueMult;
+    EditText etMinValueDiv;
+    EditText etMaxValueDiv;
     CheckBox cbAddOp;
     CheckBox cbSubOp;
     CheckBox cbMultOp;
@@ -57,6 +66,10 @@ public class OptionsActivity extends AppCompatActivity {
     {
         etMinValue=findViewById(R.id.editTextMin);
         etMaxValue=findViewById(R.id.editTextMax);
+        etMinValueMult=findViewById(R.id.editTextMinMult);
+        etMaxValueMult=findViewById(R.id.editTextMaxMult);
+        etMinValueDiv=findViewById(R.id.editTextMinDiv);
+        etMaxValueDiv=findViewById(R.id.editTextMaxDiv);
 
         cbAddOp=findViewById(R.id.checkBoxAdd);
         cbSubOp=findViewById(R.id.checkBoxSub);
@@ -76,8 +89,8 @@ public class OptionsActivity extends AppCompatActivity {
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main, menu);
+      //  MenuInflater inflater = getMenuInflater();
+      //  inflater.inflate(R.menu.main, menu);
         return true;
     }
     @Override
@@ -114,6 +127,10 @@ public class OptionsActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState, outPersistentState);
         outState.putString(STATE_MIN,etMinValue.getText().toString());
         outState.putString(STATE_MAX,etMaxValue.getText().toString());
+        outState.putString(STATE_MINMULT,etMinValueMult.getText().toString());
+        outState.putString(STATE_MAXMULT,etMaxValueMult.getText().toString());
+        outState.putString(STATE_MINDIV,etMinValueDiv.getText().toString());
+        outState.putString(STATE_MAXDIV,etMaxValueDiv.getText().toString());
         outState.putBoolean(STATE_ISADD,cbAddOp.isChecked());
         outState.putBoolean(STATE_ISSUB,cbSubOp.isChecked());
         outState.putBoolean(STATE_ISMULT,cbMultOp.isChecked());
@@ -129,6 +146,19 @@ public class OptionsActivity extends AppCompatActivity {
         if (savedInstanceState.containsKey(STATE_MAX)){
             etMaxValue.setText(savedInstanceState.getString(STATE_MAX));
         }
+        if (savedInstanceState.containsKey(STATE_MINMULT)){
+            etMinValueMult.setText(savedInstanceState.getString(STATE_MINMULT));
+        }
+        if (savedInstanceState.containsKey(STATE_MAXMULT)){
+            etMaxValueMult.setText(savedInstanceState.getString(STATE_MAXMULT));
+        }
+        if (savedInstanceState.containsKey(STATE_MINDIV)){
+            etMinValueDiv.setText(savedInstanceState.getString(STATE_MINDIV));
+        }
+        if (savedInstanceState.containsKey(STATE_MAXDIV)){
+            etMaxValueDiv.setText(savedInstanceState.getString(STATE_MAXDIV));
+        }
+
         if (savedInstanceState.containsKey(STATE_ISADD)){
             cbAddOp.setChecked(savedInstanceState.getBoolean(STATE_ISADD));
         }
@@ -149,6 +179,11 @@ public class OptionsActivity extends AppCompatActivity {
 
         etMinValue.setText(selectedChild.getMinparam().toString());
         etMaxValue.setText(selectedChild.getMaxparam().toString());
+        etMinValueMult.setText(selectedChild.getMinparammult().toString());
+        etMaxValueMult.setText(selectedChild.getMaxparammult().toString());
+        etMinValueDiv.setText(selectedChild.getMinparamdiv().toString());
+        etMaxValueDiv.setText(selectedChild.getMaxparamdiv().toString());
+
 
         cbAddOp.setChecked(selectedChild.getAdd());
         cbSubOp.setChecked(selectedChild.getSub());
@@ -161,11 +196,21 @@ public class OptionsActivity extends AppCompatActivity {
     private Boolean Validate() {
         String strMin=etMinValue.getText().toString();
         String strMax=etMaxValue.getText().toString();
-        Integer n1,n2;
+        String strMinMult=etMinValueMult.getText().toString();
+        String strMaxMult=etMaxValueMult.getText().toString();
+        String strMinDiv=etMinValueDiv.getText().toString();
+        String strMaxDiv=etMaxValueDiv.getText().toString();
+
+        Integer n1,n2,n3,n4,n5,n6;
 
         try {
             n1 = Integer.parseInt(strMin);
             n2 = Integer.parseInt(strMax);
+            n3 = Integer.parseInt(strMinMult);
+            n4 = Integer.parseInt(strMaxMult);
+            n5 = Integer.parseInt(strMinDiv);
+            n6 = Integer.parseInt(strMaxDiv);
+
         }catch (NumberFormatException e) {
             tvError2.setText(R.string.option_error_invalidint);
             return false;
@@ -187,6 +232,16 @@ public class OptionsActivity extends AppCompatActivity {
                 return false;
             }
         }
+        if (n3>n4)
+        {
+            tvError2.setText(R.string.option_error_fromltto);
+            return false;
+        }
+        if (n5>n6)
+        {
+            tvError2.setText(R.string.option_error_fromltto);
+            return false;
+        }
 
         return true;
 
@@ -201,12 +256,24 @@ public class OptionsActivity extends AppCompatActivity {
 
         String strMin=etMinValue.getText().toString();
         String strMax=etMaxValue.getText().toString();
+        String strMinMult=etMinValueMult.getText().toString();
+        String strMaxMult=etMaxValueMult.getText().toString();
+        String strMinDiv=etMinValueDiv.getText().toString();
+        String strMaxDiv=etMaxValueDiv.getText().toString();
 
         Integer nMin=Integer.parseInt(strMin);
         Integer nMax=Integer.parseInt(strMax);
+        Integer nMinMult=Integer.parseInt(strMinMult);
+        Integer nMaxMult=Integer.parseInt(strMaxMult);
+        Integer nMinDiv=Integer.parseInt(strMinDiv);
+        Integer nMaxDiv=Integer.parseInt(strMaxDiv);
 
         selectedChild.setMinparam(nMin);
         selectedChild.setMaxparam(nMax);
+        selectedChild.setMinparammult(nMinMult);
+        selectedChild.setMaxparammult(nMaxMult);
+        selectedChild.setMinparamdiv(nMinDiv);
+        selectedChild.setMaxparamdiv(nMaxDiv);
 
         selectedChild.setAdd(cbAddOp.isChecked());
         selectedChild.setSub(cbSubOp.isChecked());

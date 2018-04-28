@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -78,6 +80,10 @@ public class MainActivity extends AppCompatActivity
     ImageView aniView;
     ImageView oppView;
     boolean   inAnimation=false;
+    Integer   TryAgainCounter=0;
+    // Last Ex
+    String   lastParam1,lastParam2,lastOp;
+
 
 
     @Override
@@ -245,9 +251,12 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-
+    /*
+    Init Round
+     */
     public void InitRound()
     {
+        TryAgainCounter=0;
         ivgood.setVisibility(View.GONE);
         ivbad.setVisibility(View.GONE);
 
@@ -265,16 +274,40 @@ public class MainActivity extends AppCompatActivity
         }
 
 
-        Random r = new Random(new Date().getTime());
+        Random r1 = new Random(new Date().getTime());
 
-        Integer n1start=m_selectedChild.getMinparam();
-        Integer n1end=m_selectedChild.getMaxparam();
-        int norm=n1end-n1start;
-        norm=Math.abs(norm);
+        Integer n1start;
+        Integer n1end;
+
+
+        switch(nOp){
+            case 1:
+                n1start=m_selectedChild.getMinparam();
+                n1end=m_selectedChild.getMaxparam();
+                break;
+            case 2:
+                n1start=m_selectedChild.getMinparam();
+                n1end=m_selectedChild.getMaxparam();
+                break;
+            case 3:
+                n1start=m_selectedChild.getMinparammult();
+                n1end=m_selectedChild.getMaxparammult();
+                break;
+            case 4:
+                n1start=m_selectedChild.getMinparamdiv();
+                n1end=m_selectedChild.getMaxparamdiv();
+                break;
+            default:
+                n1start=m_selectedChild.getMinparam();
+                n1end=m_selectedChild.getMaxparam();
+        }
+
+        int norm1=n1end-n1start;
+        norm1=Math.abs(norm1);
         // Normalize the result
 
-        Integer n1=r.nextInt(norm);
-        Integer n2=r.nextInt(norm);
+        Integer n1=r1.nextInt(norm1);
+        Integer n2=r1.nextInt(norm1);
         // Move the result back to range
         n1=n1start+n1;
         n2=n1start+n2;
@@ -332,6 +365,9 @@ public class MainActivity extends AppCompatActivity
 
         }
 
+        lastParam1=n1.toString();
+        lastParam2=n2.toString();
+        lastOp=strOp;
         tvop.setText(strOp);
         tv1.setText(n1.toString());
         tv2.setText(n2.toString());
@@ -353,6 +389,35 @@ public class MainActivity extends AppCompatActivity
         Runnable myRunnableThread = new CountDownRunner();
         myThread= new Thread(myRunnableThread);
         myThread.start();
+    }
+
+    /*
+    Init Round After Retry
+     */
+    public void InitRoundRetry() {
+
+        tvop.setText(lastOp);
+        tv1.setText(lastParam1);
+        tv2.setText(lastParam2);
+        etResult.setText("");
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(etResult, InputMethodManager.SHOW_IMPLICIT);
+
+
+        //calac UTC Offset
+
+        TimeZone tz = TimeZone.getDefault();
+        Date now = new Date();
+        utcOffset = tz.getOffset(now.getTime());
+
+        // Start Thread
+        Startdt  = new Date();
+        waitedSec=0L;
+        bmyThreadStop=false;
+        Runnable myRunnableThread = new CountDownRunner();
+        myThread= new Thread(myRunnableThread);
+        myThread.start();
+
     }
 
     protected int InitRoundHelperAction(){
@@ -394,9 +459,12 @@ public class MainActivity extends AppCompatActivity
         return 0;
 
     }
+    /*
 
+     */
     protected void CheckResults(){
 
+        TryAgainCounter=0;
 
         if (myThread!=null)
         {
@@ -456,27 +524,62 @@ public class MainActivity extends AppCompatActivity
         }
         finally {
             //load an animation from XML
-            Animation animation1 = AnimationUtils.loadAnimation(this,animResource);
+            final Animation animation1 = AnimationUtils.loadAnimation(this, animResource);
             animation1.setDuration(1500);
 
-         animation1.setAnimationListener(new Animation.AnimationListener(){
-            @Override
-            public void onAnimationStart(Animation arg0) {
-                inAnimation=true;
-            }
-            @Override
-            public void onAnimationRepeat(Animation arg0) {
-            }
-            @Override
-            public void onAnimationEnd(Animation arg0) {
-                // Bail out to next screen
-                // --> Move to next questio NextPrevQ("Next");
-                ivgood.setVisibility(View.GONE);
-                ivbad.setVisibility(View.GONE);
-                InitRound();
-                inAnimation=false;
-            }
-        });
+
+            animation1.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation arg0) {
+                    inAnimation = true;
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation arg0) {
+                }
+
+                @Override
+                public void onAnimationEnd(Animation arg0) {
+                    // Bail out to next screen
+                    // --> Move to next questio NextPrevQ("Next");
+                    ivgood.setVisibility(View.GONE);
+                    ivbad.setVisibility(View.GONE);
+                    inAnimation = false;
+
+
+
+                    /*****************
+                     * Start Try again Dialog
+                     */
+
+                    if (TryAgainCounter==0){
+                        InitRound();
+                    }
+                    if (TryAgainCounter==1) {
+                        final TryAgainDialog tad = new TryAgainDialog(MainActivity.this);
+                        tad.doTryAgain = new TryAgainDialog.OnTryAgainListener() {
+                            @Override
+                            public void OnTryAgain(boolean isTryAgain) {
+                                if (isTryAgain) {
+                                    InitRoundRetry();
+
+                                } else {
+                                    InitRound();
+                                    tad.dismiss();
+                                }
+                            }
+                        };
+                        tad.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        TryAgainCounter=0;
+                        tad.show();
+                    }
+
+                    /*****************
+                     * End Try again Dialog
+                     */
+                    //animation1.cancel();
+                }
+            });
 
             aniView.startAnimation(animation1);
             animation1.start();
@@ -788,11 +891,13 @@ public class MainActivity extends AppCompatActivity
 
         if (isGoodAnswer)
         {
+            TryAgainCounter=0;
             aniView=ivgood;
             oppView=ivbad;
         }
         else
         {
+            TryAgainCounter=1;
             aniView=ivbad;
             oppView=ivgood;
         }
@@ -800,33 +905,21 @@ public class MainActivity extends AppCompatActivity
 
         animResource=R.anim.push_left_in;
         Random rndGen=new Random();
-        int nRandInt=rndGen.nextInt(63);
-        nRandInt = nRandInt % 7;
+        int nRandInt=rndGen.nextInt(90);
+        nRandInt = nRandInt % 3;
         switch(nRandInt)
         {
             case 0:
-                animResource=R.anim.fadein;
+                animResource=R.anim.push_left_out;
                 break;
             case 1:
-                animResource=R.anim.fadeout;
-                break;
-            case 2:
-                animResource=R.anim.push_left_in;
-                break;
-            case 3:
-                animResource=R.anim.rotation;
-                break;
-            case 4:
                 animResource=R.anim.push_right_out;
                 break;
-            case 5:
-                animResource=R.anim.push_right_in;
-                break;
-            case 6:
+            case 2:
                 animResource=R.anim.push_left_out;
                 break;
             default:
-                animResource=R.anim.push_left_in;
+                animResource=R.anim.push_right_out;
                 break;
         }
         aniView.setVisibility(View.VISIBLE);
