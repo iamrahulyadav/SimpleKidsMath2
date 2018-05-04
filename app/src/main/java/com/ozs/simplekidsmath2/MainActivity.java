@@ -324,7 +324,7 @@ public class MainActivity extends AppCompatActivity
                 strOp="*";
                 break;
             case 4:
-                strOp="/";
+                strOp="\u00F7";
                 break;
             default:
                 strOp="+";
