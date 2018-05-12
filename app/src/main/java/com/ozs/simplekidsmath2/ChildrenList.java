@@ -129,6 +129,21 @@ public class ChildrenList {
                 Element multGx = doc.createElement("multG");
                 Element divGx = doc.createElement("divG");
 
+                Element addNox2 = doc.createElement("addNo2");
+                Element subNox2=doc.createElement("subNo2");
+                Element multNox2 = doc.createElement("multNo2");
+                Element divNox2 = doc.createElement("divNo2");
+
+                Element addTimex2 = doc.createElement("addTime2");
+                Element subTimex2=doc.createElement("subTime2");
+                Element multTimex2 = doc.createElement("multTime2");
+                Element divTimex2 = doc.createElement("divTime2");
+
+                Element addGx2 = doc.createElement("addG2");
+                Element subGx2=doc.createElement("subG2");
+                Element multGx2 = doc.createElement("multG2");
+                Element divGx2 = doc.createElement("divG2");
+
                 Element isAddx = doc.createElement("isAdd");
                 Element isSubx=doc.createElement("isSub");
                 Element isMultx = doc.createElement("isMult");
@@ -162,6 +177,22 @@ public class ChildrenList {
                 subGx.appendChild(doc.createTextNode(child.getSubG().toString()));
                 multGx.appendChild(doc.createTextNode(child.getMultG().toString()));
                 divGx.appendChild(doc.createTextNode(child.getDivG().toString()));
+
+                addNox2.appendChild(doc.createTextNode(child.getAddNo2().toString()));
+                subNox2.appendChild(doc.createTextNode(child.getSubNo2().toString()));
+                multNox2.appendChild(doc.createTextNode(child.getMultNo2().toString()));
+                divNox2.appendChild(doc.createTextNode(child.getDivNo2().toString()));
+
+                addTimex2.appendChild(doc.createTextNode(child.getAddTime2().toString()));
+                subTimex2.appendChild(doc.createTextNode(child.getSubTime2().toString()));
+                multTimex2.appendChild(doc.createTextNode(child.getMultTime2().toString()));
+                divTimex2.appendChild(doc.createTextNode(child.getDivTime2().toString()));
+
+                addGx2.appendChild(doc.createTextNode(child.getAddG2().toString()));
+                subGx2.appendChild(doc.createTextNode(child.getSubG2().toString()));
+                multGx2.appendChild(doc.createTextNode(child.getMultG2().toString()));
+                divGx2.appendChild(doc.createTextNode(child.getDivG2().toString()));
+
 
                 isAddx.appendChild(doc.createTextNode(child.getAdd() ? "1":"0"));
                 isSubx.appendChild(doc.createTextNode(child.getSub() ? "1":"0"));
@@ -366,6 +397,39 @@ public class ChildrenList {
                             String multG=eChild.getElementsByTagName("multG").item(0).getTextContent();
                             String divG=eChild.getElementsByTagName("divG").item(0).getTextContent();
 
+
+                            EnsureTagInt(doc,eChild,"addNo2",0);
+                            EnsureTagInt(doc,eChild,"subNo2",0);
+                            EnsureTagInt(doc,eChild,"multNo2",0);
+                            EnsureTagInt(doc,eChild,"divNo2",0);
+
+                            EnsureTagLong(doc,eChild,"addTime2",0L);
+                            EnsureTagLong(doc,eChild,"subTime2",0L);
+                            EnsureTagLong(doc,eChild,"multTime2",0L);
+                            EnsureTagLong(doc,eChild,"divTime2",0L);
+
+                            EnsureTagInt(doc,eChild,"addG2",0);
+                            EnsureTagInt(doc,eChild,"subG2",0);
+                            EnsureTagInt(doc,eChild,"multG2",0);
+                            EnsureTagInt(doc,eChild,"divG2",0);
+
+
+                            String addNo2=eChild.getElementsByTagName("addNo2").item(0).getTextContent();
+                            String subNo2=eChild.getElementsByTagName("subNo2").item(0).getTextContent();
+                            String multNo2=eChild.getElementsByTagName("multNo2").item(0).getTextContent();
+                            String divNo2=eChild.getElementsByTagName("divNo2").item(0).getTextContent();
+
+                            String addTime2=eChild.getElementsByTagName("addTime2").item(0).getTextContent();
+                            String subTime2=eChild.getElementsByTagName("subTime2").item(0).getTextContent();
+                            String multTime2=eChild.getElementsByTagName("multTime2").item(0).getTextContent();
+                            String divTime2=eChild.getElementsByTagName("divTime2").item(0).getTextContent();
+
+                            String addG2=eChild.getElementsByTagName("addG2").item(0).getTextContent();
+                            String subG2=eChild.getElementsByTagName("subG2").item(0).getTextContent();
+                            String multG2=eChild.getElementsByTagName("multG2").item(0).getTextContent();
+                            String divG2=eChild.getElementsByTagName("divG2").item(0).getTextContent();
+
+
                             String isAdd=eChild.getElementsByTagName("isAdd").item(0).getTextContent();
                             String isSub=eChild.getElementsByTagName("isSub").item(0).getTextContent();
                             String isMult=eChild.getElementsByTagName("isMult").item(0).getTextContent();
@@ -403,6 +467,21 @@ public class ChildrenList {
                             child.setMultG(Integer.parseInt(multG));
                             child.setDivG(Integer.parseInt(divG));
 
+                            child.setAddNo2(Integer.parseInt(addNo2));
+                            child.setSubNo2(Integer.parseInt(subNo2));
+                            child.setMultNo2(Integer.parseInt(multNo2));
+                            child.setDivNo2(Integer.parseInt(divNo2));
+
+                            child.setAddTime2(Long.parseLong(addTime2));
+                            child.setSubTime2(Long.parseLong(subTime2));
+                            child.setMultTime2(Long.parseLong(multTime2));
+                            child.setDivTime2(Long.parseLong(divTime2));
+
+                            child.setAddG2(Integer.parseInt(addG2));
+                            child.setSubG2(Integer.parseInt(subG2));
+                            child.setMultG2(Integer.parseInt(multG2));
+                            child.setDivG2(Integer.parseInt(divG2));
+
                             child.setAdd(Integer.parseInt(isAdd)==1);
                             child.setSub(Integer.parseInt(isSub)==1);
                             child.setMult(Integer.parseInt(isMult)==1);
@@ -431,6 +510,24 @@ public class ChildrenList {
             e.printStackTrace();
         }
     }
+
+    protected void EnsureTagInt(Document doc,Element eChild, String tagName,Integer defaultValue){
+        NodeList nl=eChild.getElementsByTagName(tagName);
+        if ((nl==null)||(nl.getLength()==0)) {
+            Element param=doc.createElement(tagName);
+            param.appendChild(doc.createTextNode(defaultValue.toString()));
+            eChild.appendChild(param);
+        }
+    }
+    protected void EnsureTagLong(Document doc,Element eChild, String tagName,Long defaultValue){
+        NodeList nl=eChild.getElementsByTagName(tagName);
+        if ((nl==null)||(nl.getLength()==0)) {
+            Element param=doc.createElement(tagName);
+            param.appendChild(doc.createTextNode(defaultValue.toString()));
+            eChild.appendChild(param);
+        }
+    }
+
 
     public void CopyDefaultImage(){
         m_clistPresentor.CopyDefaultImage(DEFAULT_CHILD);

@@ -34,6 +34,18 @@ public class Child {
     private Integer  subG=0;
     private Integer  multG=0;
     private Integer  divG=0;
+    private Integer  addNo2=0;
+    private Integer  subNo2=0;
+    private Integer  multNo2=0;
+    private Integer  divNo2=0;
+    private Long     addTime2=0L;
+    private Long     subTime2=0L;
+    private Long     multTime2=0L;
+    private Long     divTime2=0L;
+    private Integer  addG2=0;
+    private Integer  subG2=0;
+    private Integer  multG2=0;
+    private Integer  divG2=0;
     private Boolean  isAdd=true;
     private Boolean  isSub=true;
     private Boolean  isMult=true;
@@ -302,5 +314,101 @@ public class Child {
 
     public void setMaxparammult(Integer maxparammult) {
         this.maxparammult = maxparammult;
+    }
+
+    public Integer getAddNo2() {
+        return addNo2;
+    }
+
+    public void setAddNo2(Integer addNo2) {
+        this.addNo2 = addNo2;
+    }
+
+    public Integer getSubNo2() {
+        return subNo2;
+    }
+
+    public void setSubNo2(Integer subNo2) {
+        this.subNo2 = subNo2;
+    }
+
+    public Integer getMultNo2() {
+        return multNo2;
+    }
+
+    public void setMultNo2(Integer multNo2) {
+        this.multNo2 = multNo2;
+    }
+
+    public Integer getDivNo2() {
+        return divNo2;
+    }
+
+    public void setDivNo2(Integer divNo2) {
+        this.divNo2 = divNo2;
+    }
+
+    public Long getAddTime2() {
+        return addTime2;
+    }
+
+    public void setAddTime2(Long addTime2) {
+        this.addTime2 = addTime2;
+    }
+
+    public Long getSubTime2() {
+        return subTime2;
+    }
+
+    public void setSubTime2(Long subTime2) {
+        this.subTime2 = subTime2;
+    }
+
+    public Long getMultTime2() {
+        return multTime2;
+    }
+
+    public void setMultTime2(Long multTime2) {
+        this.multTime2 = multTime2;
+    }
+
+    public Long getDivTime2() {
+        return divTime2;
+    }
+
+    public void setDivTime2(Long divTime2) {
+        this.divTime2 = divTime2;
+    }
+
+    public Integer getAddG2() {
+        return addG2;
+    }
+
+    public void setAddG2(Integer addG2) {
+        this.addG2 = addG2;
+    }
+
+    public Integer getSubG2() {
+        return subG2;
+    }
+
+    public void setSubG2(Integer subG2) {
+        this.subG2 = subG2;
+    }
+
+    public Integer getMultG2() {
+        return multG2;
+    }
+
+    public void setMultG2(Integer multG2) {
+        this.multG2 = multG2;
+    }
+
+    public Integer getDivG2() {
+        return divG2;
+    }
+
+    public void setDivG2(Integer divG2) {
+        this.divG2 = divG2;
     }
 }
