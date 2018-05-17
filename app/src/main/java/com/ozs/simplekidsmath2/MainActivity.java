@@ -248,7 +248,6 @@ public class MainActivity extends AppCompatActivity
         ivgood.setVisibility(View.GONE);
         ivbad.setVisibility(View.GONE);
         tvop.setText("+");
-
     }
 
     /*
