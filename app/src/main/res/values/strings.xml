@@ -43,4 +43,15 @@
     <string name="lbl_textseconds">Sec.:</string>
     <string name="lbl_try_again">Try again ?</string>
 
+
+    <string name="tbl_correct">Correct</string>
+    <string name="tbl_error">Errors</string>
+    <string name="tbl_total">Total</string>
+    <string name="tbl_addition">Add.</string>
+    <string name="tbl_subtraction">Sub.</string>
+    <string name="tbl_multiplication">Mult.</string>
+    <string name="tbl_deviation">Dev.</string>
+
+
+
 </resources>

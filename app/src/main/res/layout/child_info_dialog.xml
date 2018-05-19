@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/childinfo_shape"
+    android:orientation="vertical" >
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:stretchColumns="5">
+                <TableRow>
+                    <TextView
+                        android:text=""
+                        android:padding="3dip" />
+                    <TextView
+                        android:text="@string/tbl_correct"
+                        android:gravity="center"
+                        android:padding="3dip" />
+                    <TextView
+                        android:text="@string/tbl_error"
+                        android:gravity="center"
+                        android:padding="3dip" />
+                    <TextView
+                        android:text="@string/tbl_total"
+                        android:gravity="center"
+                        android:padding="3dip" />
+                    <TextView
+                        android:text=""
+                        android:padding="3dip" />
+                </TableRow>
+                <TableRow>
+                    <TextView
+                        android:text="@string/tbl_addition"
+                        android:padding="3dip" />
+                    <TextView
+                        android:id="@+id/add_correct"
+                        android:text="0"
+                        android:gravity="center"
+                        android:padding="3dip" />
+                    <TextView
+                        android:id="@+id/add_error"
+                        android:text="0"
+                        android:gravity="center"
+                        android:padding="3dip" />
+                    <TextView
+                        android:id="@+id/add_total"
+                        android:text="0"
+                        android:gravity="center"
+                        android:padding="3dip" />
+                    <TextView
+                        android:text=""
+                        android:padding="3dip" />
+                </TableRow>
+                <TableRow>
+                <TextView
+                    android:text="@string/tbl_subtraction"
+                    android:padding="3dip" />
+                <TextView
+                    android:id="@+id/sub_correct"
+                    android:text="0"
+                    android:gravity="center"
+                    android:padding="3dip" />
+                <TextView
+                    android:id="@+id/sub_error"
+                    android:text="0"
+                    android:gravity="center"
+                    android:padding="3dip" />
+                <TextView
+                    android:id="@+id/sub_total"
+                    android:text="0"
+                    android:gravity="center"
+                    android:padding="3dip" />
+                    <TextView
+                        android:text=""
+                        android:padding="3dip" />
+            </TableRow>
+            <TableRow>
+                    <TextView
+                        android:text="@string/tbl_multiplication"
+                        android:padding="@dimen/tbl_padding" />
+                    <TextView
+                        android:id="@+id/mult_correct"
+                        android:text="0"
+                        android:gravity="center"
+                        android:padding="@dimen/tbl_padding" />
+                    <TextView
+                        android:id="@+id/mult_error"
+                        android:text="0"
+                        android:gravity="center"
+                        android:padding="@dimen/tbl_padding" />
+                    <TextView
+                        android:id="@+id/mult_total"
+                        android:text="0"
+                        android:gravity="center"
+                        android:padding="@dimen/tbl_padding" />
+                    <TextView
+                        android:text=""
+                        android:padding="@dimen/tbl_padding" />
+                </TableRow>
+                <TableRow>
+                    <TextView
+                        android:text="@string/tbl_deviation"
+                        android:padding="@dimen/tbl_padding" />
+                    <TextView
+                        android:id="@+id/dev_correct"
+                        android:text="0"
+                        android:gravity="center"
+                        android:padding="@dimen/tbl_padding" />
+                    <TextView
+                        android:id="@+id/dev_error"
+                        android:text="0"
+                        android:gravity="center"
+                        android:padding="@dimen/tbl_padding" />
+                    <TextView
+                        android:id="@+id/dev_total"
+                        android:text="0"
+                        android:gravity="center"
+                        android:padding="@dimen/tbl_padding" />
+                    <TextView
+                        android:text=""
+                        android:padding="@dimen/tbl_padding" />
+                </TableRow>
+        </TableLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="#3E80B4"
+                android:orientation="horizontal" >
+
+                <Button
+                    android:id="@+id/btn_okchildinfo"
+                    android:layout_width="100dp"
+                    android:layout_height="30dp"
+                    android:background="@android:color/white"
+                    android:clickable="true"
+                    android:text="Yes"
+                    android:textColor="#5DBCD2"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

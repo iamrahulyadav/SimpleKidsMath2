@@ -483,9 +483,19 @@ public class MainActivity extends AppCompatActivity
 
             if (tvop.getText().toString()=="+")
             {
+                if (m_selectedChild!=null){
+                    m_selectedChild.setAddNo(m_selectedChild.getAddNo()+1);
+                    m_selectedChild.setAddNo2(m_selectedChild.getAddNo2()+1);
+                }
 
                 if (n1 + n2 == n3) {
-                        GoodSign();
+                    if (m_selectedChild!=null){
+                        m_selectedChild.setAddG(m_selectedChild.getAddG()+1 );
+                        m_selectedChild.setAddG2(m_selectedChild.getAddG2()+1);
+                        m_selectedChild.setAddTime(m_selectedChild.getAddTime() + waitedSec);
+                        m_selectedChild.setAddTime2(m_selectedChild.getAddTime2() + waitedSec);
+                    }
+                    GoodSign();
                 }
                 else
                 {
@@ -493,7 +503,20 @@ public class MainActivity extends AppCompatActivity
                 }
             }
             else if (tvop.getText().toString()=="-") {
+
+                if (m_selectedChild!=null){
+                    m_selectedChild.setSubNo(m_selectedChild.getSubNo()+1);
+                    m_selectedChild.setSubNo2(m_selectedChild.getSubNo2()+1);
+                }
+
                 if (n1 - n2 == n3) {
+                    if (m_selectedChild!=null){
+                        m_selectedChild.setSubG(m_selectedChild.getSubG()+1);
+                        m_selectedChild.setSubG2(m_selectedChild.getSubG2()+1);
+                        m_selectedChild.setSubTime(m_selectedChild.getSubTime() + waitedSec);
+                        m_selectedChild.setSubTime2(m_selectedChild.getSubTime2() + waitedSec);
+
+                    }
                         GoodSign();
                 }
                 else
@@ -501,16 +524,39 @@ public class MainActivity extends AppCompatActivity
                         BadSign();
                 }
             }else if (tvop.getText().toString()=="*") {
+                if (m_selectedChild!=null){
+                    m_selectedChild.setMultNo(m_selectedChild.getMultNo()+1);
+                    m_selectedChild.setMultNo2(m_selectedChild.getMultNo2()+1);
+                }
+
                 if (n1 * n2 == n3) {
-                        GoodSign();
+                    if (m_selectedChild!=null){
+                        m_selectedChild.setMultG(m_selectedChild.getMultG()+1);
+                        m_selectedChild.setMultG2(m_selectedChild.getMultG2()+1);
+                        m_selectedChild.setMultTime(m_selectedChild.getMultTime() + waitedSec);
+                        m_selectedChild.setMultTime2(m_selectedChild.getMultTime2() + waitedSec);
+
+                    }
+                    GoodSign();
                 }
                 else
                 {
                         BadSign();
                 }
             }else {
+                if (m_selectedChild!=null){
+                    m_selectedChild.setDivNo(m_selectedChild.getDivNo()+1);
+                    m_selectedChild.setDivNo2(m_selectedChild.getDivNo2()+1);
+                }
+
                 if (n1 / n2 == n3) {
-                        GoodSign();
+                    if (m_selectedChild!=null){
+                        m_selectedChild.setDivG(m_selectedChild.getDivG());
+                        m_selectedChild.setDivG2(m_selectedChild.getDivG2());
+                        m_selectedChild.setDivTime(m_selectedChild.getDivTime() + waitedSec);
+                        m_selectedChild.setDivTime2(m_selectedChild.getDivTime2() + waitedSec);
+                    }
+                    GoodSign();
                 }
                 else
                 {
@@ -522,6 +568,7 @@ public class MainActivity extends AppCompatActivity
         {
         }
         finally {
+            ChildrenList.getInstance().SaveData();
             //load an animation from XML
             final Animation animation1 = AnimationUtils.loadAnimation(this, animResource);
             animation1.setDuration(1500);
@@ -544,8 +591,6 @@ public class MainActivity extends AppCompatActivity
                     ivgood.setVisibility(View.GONE);
                     ivbad.setVisibility(View.GONE);
                     inAnimation = false;
-
-
 
                     /*****************
                      * Start Try again Dialog
