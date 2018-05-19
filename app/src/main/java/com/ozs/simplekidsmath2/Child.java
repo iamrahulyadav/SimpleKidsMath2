@@ -19,9 +19,9 @@ public class Child {
     private Integer  minparam=1;
     private Integer  maxparam=20;
     private Integer  minparamdiv=1;
-    private Integer  maxparamdiv=20;
+    private Integer  maxparamdiv=15;
     private Integer  minparammult=1;
-    private Integer  maxparammult=20;
+    private Integer  maxparammult=10;
     private Integer  addNo=0;
     private Integer  subNo=0;
     private Integer  multNo=0;

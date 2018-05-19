@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     public static final Integer MAX_CHILDEREN = 6;
-    public static final Integer MAX_Q_TO_INFO = 6;
+    public static final Integer MAX_Q_TO_INFO = 10;
     public static final Boolean TRACE_FLAG = false;
     public static final String CHILD_MODE = "CHILD_MODE";
     public static final String CHILD_MODE_VALUE_ADD = "ADD";
@@ -201,6 +201,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        CheckBounderies();
         InitRound();
 
     }
@@ -256,6 +257,7 @@ public class MainActivity extends AppCompatActivity
      */
     public void InitRound()
     {
+
         TryAgainCounter=0;
         ivgood.setVisibility(View.GONE);
         ivbad.setVisibility(View.GONE);
@@ -375,7 +377,6 @@ public class MainActivity extends AppCompatActivity
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(etResult, InputMethodManager.SHOW_IMPLICIT);
 
-
         //calac UTC Offset
 
         TimeZone tz = TimeZone.getDefault();
@@ -395,6 +396,7 @@ public class MainActivity extends AppCompatActivity
     Init Round After Retry
      */
     public void InitRoundRetry() {
+
 
         tvop.setText(lastOp);
         tv1.setText(lastParam1);
@@ -524,7 +526,7 @@ public class MainActivity extends AppCompatActivity
                 {
                         BadSign();
                 }
-            }else if (tvop.getText().toString()=="*") {
+            }else if (tvop.getText().toString()=="X") {
                 if (m_selectedChild!=null){
                     m_selectedChild.setMultNo(m_selectedChild.getMultNo()+1);
                     m_selectedChild.setMultNo2(m_selectedChild.getMultNo2()+1);
@@ -552,8 +554,8 @@ public class MainActivity extends AppCompatActivity
 
                 if (n1 / n2 == n3) {
                     if (m_selectedChild!=null){
-                        m_selectedChild.setDivG(m_selectedChild.getDivG());
-                        m_selectedChild.setDivG2(m_selectedChild.getDivG2());
+                        m_selectedChild.setDivG(m_selectedChild.getDivG()+1);
+                        m_selectedChild.setDivG2(m_selectedChild.getDivG2()+1);
                         m_selectedChild.setDivTime(m_selectedChild.getDivTime() + waitedSec);
                         m_selectedChild.setDivTime2(m_selectedChild.getDivTime2() + waitedSec);
                     }
@@ -598,7 +600,43 @@ public class MainActivity extends AppCompatActivity
                      */
 
                     if (TryAgainCounter==0){
-                        InitRound();
+
+                            // Child Info Dialog
+                            boolean fInitRound=true;
+
+                            if (m_selectedChild!=null) {
+
+                                int total=m_selectedChild.getAddNo()+
+                                          m_selectedChild.getSubNo()+
+                                          m_selectedChild.getMultNo()+
+                                          m_selectedChild.getDivNo();
+
+                                if (total>=MAX_Q_TO_INFO) {
+                                    fInitRound=false;
+                                    final ChildInfoDialog cid = new ChildInfoDialog(MainActivity.this,
+                                            AssignChildInfo());
+
+                                    cid.doOK = new ChildInfoDialog.OnOKChildInfoListener() {
+                                        @Override
+                                        public void OnChildInfo() {
+                                            ResetChildCounters();
+                                            InitRound();
+                                            cid.dismiss();
+                                        }
+                                        @Override
+                                        public void OnParentResetInfo() {
+                                            ResetChildCounters();
+                                            InitRound();
+                                            cid.dismiss();
+                                        }
+                                    };
+                                    cid.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                    cid.show();
+                                }
+                            }
+                        if (fInitRound) {
+                            InitRound();
+                        }
                     }
                     if (TryAgainCounter==1) {
                         final TryAgainDialog tad = new TryAgainDialog(MainActivity.this);
@@ -617,30 +655,6 @@ public class MainActivity extends AppCompatActivity
                         tad.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                         TryAgainCounter=0;
                         tad.show();
-                    }
-                    else{
-                        // Child Info Dialog
-
-                        if (m_selectedChild!=null) {
-
-                            int total=m_selectedChild.getAddNo()+
-                                      m_selectedChild.getSubNo()+
-                                      m_selectedChild.getMultNo()+
-                                      m_selectedChild.getDivNo();
-
-                            if (total>=MAX_Q_TO_INFO) {
-                                final ChildInfoDialog cid = new ChildInfoDialog(MainActivity.this,
-                                        AssignChildInfo());
-
-                                cid.doOK = new ChildInfoDialog.OnOKChildInfoListener() {
-                                    @Override
-                                    public void OnChildInfo() {
-                                        InitRound();
-                                        cid.dismiss();
-                                    }
-                                };
-                            }
-                        }
                     }
                     /*****************
                      * End Try again Dialog
@@ -845,6 +859,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.action_settings) {
             return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
     /*
@@ -878,6 +893,11 @@ public class MainActivity extends AppCompatActivity
             Intent foo=new Intent(MainActivity.this,OptionsActivity.class);
             startActivityForResult(foo, OPTION_REQUEST);
 
+        } else if (id == R.id.nav_parent) {
+                //--------------------------------
+                // Show Parent Dialog
+                //--------------------------------
+                ShowParentDialog();
 
         } else {
             Integer startCustomMenu=m_clist.GetMinMenuId();
@@ -1031,7 +1051,6 @@ public class MainActivity extends AppCompatActivity
         if (m_selectedChild==null) {
             return;
         }
-        ChildInfo ret=new ChildInfo();
 
         m_selectedChild.setAddG(0);
         m_selectedChild.setAddTime(0L);
@@ -1076,5 +1095,45 @@ public class MainActivity extends AppCompatActivity
 
         ChildrenList.getInstance().SaveData();
     }
+    protected void CheckBounderies() {
+        if (m_selectedChild==null)
+        {
+            return;
+        }
+        if ((m_selectedChild.getAddNo2()>Integer.MAX_VALUE - 50)||
+            (m_selectedChild.getSubNo2()>Integer.MAX_VALUE - 50)||
+            (m_selectedChild.getMultNo2()>Integer.MAX_VALUE - 50)||
+            (m_selectedChild.getDivNo2()>Integer.MAX_VALUE - 50)) {
+            ResetParentCounters();
+        }
+        Long range=24L * 60L * 60L * 1000L;
 
+        if ((m_selectedChild.getAddTime2()>Long.MAX_VALUE - range)||
+                (m_selectedChild.getSubTime2()>Long.MAX_VALUE - range)||
+                (m_selectedChild.getMultTime2()>Long.MAX_VALUE - range)||
+                (m_selectedChild.getDivTime2()>Integer.MAX_VALUE - range)) {
+            ResetParentCounters();
+        }
+    }
+    protected void ShowParentDialog(){
+
+        final ChildInfoDialog cid = new ChildInfoDialog(MainActivity.this, AssignParentInfo());
+        cid.setResetVisible();
+
+        cid.doOK = new ChildInfoDialog.OnOKChildInfoListener() {
+            @Override
+            public void OnChildInfo() {
+                cid.dismiss();
+            }
+            @Override
+            public void OnParentResetInfo() {
+                ResetChildCounters();
+                ResetParentCounters();
+                InitRound();
+                cid.dismiss();
+            }
+        };
+        cid.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        cid.show();
+    }
 }
