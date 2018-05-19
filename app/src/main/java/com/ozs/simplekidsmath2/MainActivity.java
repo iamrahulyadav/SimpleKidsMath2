@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     public static final Integer MAX_CHILDEREN = 6;
+    public static final Integer MAX_Q_TO_INFO = 6;
     public static final Boolean TRACE_FLAG = false;
     public static final String CHILD_MODE = "CHILD_MODE";
     public static final String CHILD_MODE_VALUE_ADD = "ADD";
@@ -967,7 +968,90 @@ public class MainActivity extends AppCompatActivity
                 break;
         }
         aniView.setVisibility(View.VISIBLE);
-
-
     }
+
+    protected ChildInfo AssignChildInfo(){
+        if (m_selectedChild==null) {
+            return null;
+        }
+        ChildInfo ret=new ChildInfo();
+
+        ret.setAddGood(m_selectedChild.getAddG());
+        ret.setAddTotal(m_selectedChild.getAddNo());
+        ret.setSubGood(m_selectedChild.getSubG());
+        ret.setSubTotal(m_selectedChild.getSubNo());
+        ret.setMultGood(m_selectedChild.getMultG());
+        ret.setMultTotal(m_selectedChild.getMultNo());
+        ret.setDivGood(m_selectedChild.getDivG());
+        ret.setDivTotal(m_selectedChild.getDivNo());
+        return ret;
+    }
+
+    protected ChildInfo AssignParentInfo(){
+        if (m_selectedChild==null) {
+            return null;
+        }
+        ChildInfo ret=new ChildInfo();
+
+        ret.setAddGood(m_selectedChild.getAddG2());
+        ret.setAddTotal(m_selectedChild.getAddNo2());
+        ret.setSubGood(m_selectedChild.getSubG2());
+        ret.setSubTotal(m_selectedChild.getSubNo2());
+        ret.setMultGood(m_selectedChild.getMultG2());
+        ret.setMultTotal(m_selectedChild.getMultNo2());
+        ret.setDivGood(m_selectedChild.getDivG2());
+        ret.setDivTotal(m_selectedChild.getDivNo2());
+        return ret;
+    }
+
+    protected void ResetChildCounters(){
+        if (m_selectedChild==null) {
+            return;
+        }
+        ChildInfo ret=new ChildInfo();
+
+        m_selectedChild.setAddG(0);
+        m_selectedChild.setAddTime(0L);
+        m_selectedChild.setAddNo(0);
+
+        m_selectedChild.setSubG(0);
+        m_selectedChild.setSubTime(0L);
+        m_selectedChild.setSubNo(0);
+
+        m_selectedChild.setMultG(0);
+        m_selectedChild.setMultTime(0L);
+        m_selectedChild.setMultNo(0);
+
+        m_selectedChild.setDivG(0);
+        m_selectedChild.setDivTime(0L);
+        m_selectedChild.setDivNo(0);
+
+        ChildrenList.getInstance().SaveData();
+    }
+
+    protected void ResetParentCounters(){
+        if (m_selectedChild==null) {
+            return;
+        }
+        ChildInfo ret=new ChildInfo();
+
+        m_selectedChild.setAddG2(0);
+        m_selectedChild.setAddTime2(0L);
+        m_selectedChild.setAddNo2(0);
+
+        m_selectedChild.setSubG2(0);
+        m_selectedChild.setSubTime2(0L);
+        m_selectedChild.setSubNo2(0);
+
+        m_selectedChild.setMultG2(0);
+        m_selectedChild.setMultTime2(0L);
+        m_selectedChild.setMultNo2(0);
+
+        m_selectedChild.setDivG2(0);
+        m_selectedChild.setDivTime2(0L);
+        m_selectedChild.setDivNo2(0);
+
+        ChildrenList.getInstance().SaveData();
+    }
+
 }
