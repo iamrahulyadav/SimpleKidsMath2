@@ -321,7 +321,7 @@ public class MainActivity extends AppCompatActivity
                 strOp="-";
                 break;
             case 3:
-                strOp="*";
+                strOp="X";
                 break;
             case 4:
                 strOp="\u00F7";
@@ -618,11 +618,26 @@ public class MainActivity extends AppCompatActivity
                         TryAgainCounter=0;
                         tad.show();
                     }
+                    else{
+                        // Child Info Dialog
+                        if (m_selectedChild!=null) {
 
+                            final ChildInfoDialog cid = new ChildInfoDialog(MainActivity.this,
+                                    AssignChildInfo());
+
+                            cid.doOK = new ChildInfoDialog.OnOKChildInfoListener() {
+                                @Override
+                                public void OnChildInfo() {
+                                    InitRound();
+                                    cid.dismiss();
+                                }
+                            };
+                        }
+                    }
                     /*****************
                      * End Try again Dialog
                      */
-                    //animation1.cancel();
+                     //animation1.cancel();
                 }
             });
 
