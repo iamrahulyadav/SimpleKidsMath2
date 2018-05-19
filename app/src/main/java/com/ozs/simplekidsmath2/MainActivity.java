@@ -620,18 +620,26 @@ public class MainActivity extends AppCompatActivity
                     }
                     else{
                         // Child Info Dialog
+
                         if (m_selectedChild!=null) {
 
-                            final ChildInfoDialog cid = new ChildInfoDialog(MainActivity.this,
-                                    AssignChildInfo());
+                            int total=m_selectedChild.getAddNo()+
+                                      m_selectedChild.getSubNo()+
+                                      m_selectedChild.getMultNo()+
+                                      m_selectedChild.getDivNo();
 
-                            cid.doOK = new ChildInfoDialog.OnOKChildInfoListener() {
-                                @Override
-                                public void OnChildInfo() {
-                                    InitRound();
-                                    cid.dismiss();
-                                }
-                            };
+                            if (total>=MAX_Q_TO_INFO) {
+                                final ChildInfoDialog cid = new ChildInfoDialog(MainActivity.this,
+                                        AssignChildInfo());
+
+                                cid.doOK = new ChildInfoDialog.OnOKChildInfoListener() {
+                                    @Override
+                                    public void OnChildInfo() {
+                                        InitRound();
+                                        cid.dismiss();
+                                    }
+                                };
+                            }
                         }
                     }
                     /*****************
