@@ -14,6 +14,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Date;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -143,6 +145,7 @@ public class ChildrenList {
                 Element subGx2=doc.createElement("subG2");
                 Element multGx2 = doc.createElement("multG2");
                 Element divGx2 = doc.createElement("divG2");
+                Element lastScoreResetx = doc.createElement("lastScoreReset");
 
                 Element isAddx = doc.createElement("isAdd");
                 Element isSubx=doc.createElement("isSub");
@@ -192,6 +195,10 @@ public class ChildrenList {
                 subGx2.appendChild(doc.createTextNode(child.getSubG2().toString()));
                 multGx2.appendChild(doc.createTextNode(child.getMultG2().toString()));
                 divGx2.appendChild(doc.createTextNode(child.getDivG2().toString()));
+                if (child.getLastScoreReset()<=0L){
+                    child.setLastScoreReset(new Date().getTime());
+                }
+                lastScoreResetx.appendChild(doc.createTextNode(child.getLastScoreReset().toString()));
 
 
                 isAddx.appendChild(doc.createTextNode(child.getAdd() ? "1":"0"));
@@ -228,6 +235,7 @@ public class ChildrenList {
                 childx.appendChild(subGx);
                 childx.appendChild(multGx);
                 childx.appendChild(divGx);
+                childx.appendChild(lastScoreResetx);
 
                 childx.appendChild(isAddx);
                 childx.appendChild(isSubx);
@@ -412,6 +420,7 @@ public class ChildrenList {
                             EnsureTagInt(doc,eChild,"subG2",0);
                             EnsureTagInt(doc,eChild,"multG2",0);
                             EnsureTagInt(doc,eChild,"divG2",0);
+                            EnsureTagLong(doc,eChild,"lastScoreReset",0L);
 
 
                             String addNo2=eChild.getElementsByTagName("addNo2").item(0).getTextContent();
@@ -428,6 +437,7 @@ public class ChildrenList {
                             String subG2=eChild.getElementsByTagName("subG2").item(0).getTextContent();
                             String multG2=eChild.getElementsByTagName("multG2").item(0).getTextContent();
                             String divG2=eChild.getElementsByTagName("divG2").item(0).getTextContent();
+                            String lastScoreReset=eChild.getElementsByTagName("lastScoreReset").item(0).getTextContent();
 
 
                             String isAdd=eChild.getElementsByTagName("isAdd").item(0).getTextContent();
@@ -481,6 +491,10 @@ public class ChildrenList {
                             child.setSubG2(Integer.parseInt(subG2));
                             child.setMultG2(Integer.parseInt(multG2));
                             child.setDivG2(Integer.parseInt(divG2));
+                            child.setLastScoreReset(Long.parseLong(lastScoreReset));
+                            if (child.getLastScoreReset()<=0L){
+                                child.setLastScoreReset(new Date().getTime());
+                            }
 
                             child.setAdd(Integer.parseInt(isAdd)==1);
                             child.setSub(Integer.parseInt(isSub)==1);

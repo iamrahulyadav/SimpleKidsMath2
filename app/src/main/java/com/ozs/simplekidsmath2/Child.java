@@ -46,6 +46,7 @@ public class Child {
     private Integer  subG2=0;
     private Integer  multG2=0;
     private Integer  divG2=0;
+    private Long     lastScoreReset=0L;
     private Boolean  isAdd=true;
     private Boolean  isSub=true;
     private Boolean  isMult=true;
@@ -410,5 +411,13 @@ public class Child {
 
     public void setDivG2(Integer divG2) {
         this.divG2 = divG2;
+    }
+
+    public Long getLastScoreReset() {
+        return lastScoreReset;
+    }
+
+    public void setLastScoreReset(Long lastScoreReset) {
+        this.lastScoreReset = lastScoreReset;
     }
 }

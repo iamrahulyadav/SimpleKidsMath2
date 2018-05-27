@@ -54,5 +54,6 @@
     <string name="tbl_multiplication">Mult.</string>
     <string name="tbl_deviation">Dev.</string>
 
+    <string name="lbl_lastscore">Last Reset Date:</string>
 
 </resources>

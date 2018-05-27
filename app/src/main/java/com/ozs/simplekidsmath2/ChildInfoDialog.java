@@ -2,11 +2,15 @@ package com.ozs.simplekidsmath2;
 
 import android.app.Activity;
 import android.app.Dialog;
+import java.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import java.util.Date;
 
 public class ChildInfoDialog extends Dialog implements View.OnClickListener {
     public Activity c;
@@ -14,12 +18,16 @@ public class ChildInfoDialog extends Dialog implements View.OnClickListener {
     private Button ok,okreset;
     private boolean isResetVisible=false;
     private ChildInfo childInfo=null;
-    TextView tvTotal,tvGood,tvBad;
+    TextView tvGrandTotal;
+    TextView tvGrandCorrect;
+    TextView tvGrandError;
 
     TextView tvAddGood,tvAddBad,tvAddTotal;
     TextView tvSubGood,tvSubBad,tvSubTotal;
     TextView tvMultGood,tvMultBad,tvMultTotal;
     TextView tvDivGood,tvDivBad,tvDivTotal;
+    LinearLayout ll_lastscore;
+    TextView tvLastScoreReset;
 
     public ChildInfoDialog(Activity a) {
         super(a);
@@ -85,6 +93,8 @@ public class ChildInfoDialog extends Dialog implements View.OnClickListener {
         tvDivTotal= findViewById(R.id.dev_total);
         tvDivGood= findViewById(R.id.dev_correct);
         tvDivBad= findViewById(R.id.dev_error);
+        ll_lastscore=findViewById(R.id.last_score_reset_layout);
+        tvLastScoreReset= findViewById(R.id.last_score_reset);
 
         tvAddTotal.setText(childInfo.getAddTotal().toString());
         tvAddGood.setText(childInfo.getAddGood().toString());
@@ -101,6 +111,29 @@ public class ChildInfoDialog extends Dialog implements View.OnClickListener {
         tvDivTotal.setText(childInfo.getDivTotal().toString());
         tvDivGood.setText(childInfo.getDivGood().toString());
         tvDivBad.setText(childInfo.getDivBad().toString());
+
+        if(childInfo.getLastScoreReset()<=0L){
+            ll_lastscore.setVisibility(View.GONE);
+        }else{
+            ll_lastscore.setVisibility(View.VISIBLE);
+            Date date=new Date();
+            date.setTime(childInfo.getLastScoreReset());
+            SimpleDateFormat fmtOut = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+            tvLastScoreReset.setText(fmtOut.format(date));
+        }
+        tvGrandTotal=findViewById(R.id.grand_total);
+        tvGrandCorrect=findViewById(R.id.grand_correct);
+        tvGrandError=findViewById(R.id.grand_error);
+
+        Integer grandTotal= childInfo.getAddTotal()+childInfo.getSubTotal()+
+                        childInfo.getMultTotal()+childInfo.getDivTotal();
+        tvGrandTotal.setText(grandTotal.toString());
+        Integer grandCorrect= childInfo.getAddGood()+childInfo.getSubGood()+
+                childInfo.getMultGood()+childInfo.getDivGood();
+        tvGrandCorrect.setText(grandCorrect.toString());
+        Integer grandError= childInfo.getAddBad()+childInfo.getSubBad()+
+                childInfo.getMultBad()+childInfo.getDivBad();
+        tvGrandError.setText(grandError.toString());
     }
 
     @Override

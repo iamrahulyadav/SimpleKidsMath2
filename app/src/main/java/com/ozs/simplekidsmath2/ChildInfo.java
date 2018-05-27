@@ -14,6 +14,7 @@ public class ChildInfo {
     private Integer  subGood=0;
     private Integer  multGood=0;
     private Integer  divGood=0;
+    private Long     lastScoreReset=0L;
 
 
     public Integer getAddTotal() {
@@ -123,5 +124,13 @@ public class ChildInfo {
     }
     public Integer getDivBad() {
         return (getDivTotal()-getDivGood());
+    }
+
+    public Long getLastScoreReset() {
+        return lastScoreReset;
+    }
+
+    public void setLastScoreReset(Long lastScoreReset) {
+        this.lastScoreReset = lastScoreReset;
     }
 }

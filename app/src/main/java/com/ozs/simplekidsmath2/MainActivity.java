@@ -1044,6 +1044,7 @@ public class MainActivity extends AppCompatActivity
         ret.setMultTotal(m_selectedChild.getMultNo2());
         ret.setDivGood(m_selectedChild.getDivG2());
         ret.setDivTotal(m_selectedChild.getDivNo2());
+        ret.setLastScoreReset(m_selectedChild.getLastScoreReset());
         return ret;
     }
 
@@ -1092,6 +1093,7 @@ public class MainActivity extends AppCompatActivity
         m_selectedChild.setDivG2(0);
         m_selectedChild.setDivTime2(0L);
         m_selectedChild.setDivNo2(0);
+        m_selectedChild.setLastScoreReset(new Date().getTime());
 
         ChildrenList.getInstance().SaveData();
     }
