@@ -711,13 +711,13 @@ public class MainActivity extends AppCompatActivity
     // Display Good result Sign
     protected void GoodSign(){
         // Display animation
-
+        ChildrenList.getInstance().SaveData();
         startAnimation(true);
     }
 
     // Display Bad Result Sign
     protected void BadSign(){
-
+        ChildrenList.getInstance().SaveData();
         startAnimation(false);
     }
 

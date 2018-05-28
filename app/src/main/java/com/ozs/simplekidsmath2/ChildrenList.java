@@ -195,9 +195,6 @@ public class ChildrenList {
                 subGx2.appendChild(doc.createTextNode(child.getSubG2().toString()));
                 multGx2.appendChild(doc.createTextNode(child.getMultG2().toString()));
                 divGx2.appendChild(doc.createTextNode(child.getDivG2().toString()));
-                if (child.getLastScoreReset()<=0L){
-                    child.setLastScoreReset(new Date().getTime());
-                }
                 lastScoreResetx.appendChild(doc.createTextNode(child.getLastScoreReset().toString()));
 
 
@@ -226,15 +223,31 @@ public class ChildrenList {
                 childx.appendChild(multNox);
                 childx.appendChild(divNox);
 
+                childx.appendChild(addGx);
+                childx.appendChild(subGx);
+                childx.appendChild(multGx);
+                childx.appendChild(divGx);
+
                 childx.appendChild(addTimex);
                 childx.appendChild(subTimex);
                 childx.appendChild(multTimex);
                 childx.appendChild(divTimex);
 
-                childx.appendChild(addGx);
-                childx.appendChild(subGx);
-                childx.appendChild(multGx);
-                childx.appendChild(divGx);
+                childx.appendChild(addNox2);
+                childx.appendChild(subNox2);
+                childx.appendChild(multNox2);
+                childx.appendChild(divNox2);
+
+                childx.appendChild(addGx2);
+                childx.appendChild(subGx2);
+                childx.appendChild(multGx2);
+                childx.appendChild(divGx2);
+
+                childx.appendChild(addTimex2);
+                childx.appendChild(subTimex2);
+                childx.appendChild(multTimex2);
+                childx.appendChild(divTimex2);
+
                 childx.appendChild(lastScoreResetx);
 
                 childx.appendChild(isAddx);
