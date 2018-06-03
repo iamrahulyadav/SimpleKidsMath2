@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PersistableBundle;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.text.Editable;
@@ -40,6 +41,7 @@ import android.widget.Toast;
 
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 import java.util.TimeZone;
@@ -48,7 +50,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     public static final Integer MAX_CHILDEREN = 6;
-    public static final Integer MAX_Q_TO_INFO = 10;
+    public static final Integer MAX_Q_TO_INFO = 30;
     public static final Boolean TRACE_FLAG = false;
     public static final String CHILD_MODE = "CHILD_MODE";
     public static final String CHILD_MODE_VALUE_ADD = "ADD";
@@ -275,8 +277,15 @@ public class MainActivity extends AppCompatActivity
             child = new Child("dummy");
         }
 
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+        long millis = (System.currentTimeMillis() - c.getTimeInMillis());
 
-        Random r1 = new Random(new Date().getTime());
+        Random r1 = new Random(millis);
+        Random r2 = new Random(SystemClock.uptimeMillis());
 
         Integer n1start;
         Integer n1end;
@@ -446,7 +455,7 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         }
-        Random r = new Random(new Date().getTime());
+        Random r = new Random(new Date().getTime() % 86400);
         Integer n1=r.nextInt(num);
         int num2 = -1;
         for(int i=0;i<4;i++)
