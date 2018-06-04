@@ -8,6 +8,7 @@
     <string name="action_parent">Parents</string>
     <string name="title_activity_child_maint">Child Maint Activity</string>
     <string name="ok">OK</string>
+    <string name="close">Close</string>
     <string name="reset_scores">RESET SCORES</string>
     <string name="result_image_desc">crop result</string>
     <string name="main_button_select_image">Select Image</string>
