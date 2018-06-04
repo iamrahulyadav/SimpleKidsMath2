@@ -86,13 +86,14 @@ public class MainActivity extends AppCompatActivity
     Integer   TryAgainCounter=0;
     // Last Ex
     String   lastParam1,lastParam2,lastOp;
-
+    InputMethodManager imm=null;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
         if (savedInstanceState!=null)
         {
@@ -152,8 +153,6 @@ public class MainActivity extends AppCompatActivity
         });
 
         EditText etResult= findViewById(R.id.editTextRes);
-
-
         etResult.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -383,8 +382,6 @@ public class MainActivity extends AppCompatActivity
         tv1.setText(n1.toString());
         tv2.setText(n2.toString());
         etResult.setText("");
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(etResult, InputMethodManager.SHOW_IMPLICIT);
 
         //calac UTC Offset
 
@@ -399,23 +396,27 @@ public class MainActivity extends AppCompatActivity
         Runnable myRunnableThread = new CountDownRunner();
         myThread= new Thread(myRunnableThread);
         myThread.start();
+
+        etResult.postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                etResult.requestFocus();
+                imm.showSoftInput(etResult, InputMethodManager.SHOW_IMPLICIT);
+                // imm.showSoftInput(editText, 0);
+            }
+        }, 100);
     }
 
     /*
     Init Round After Retry
      */
     public void InitRoundRetry() {
-
-
         tvop.setText(lastOp);
         tv1.setText(lastParam1);
         tv2.setText(lastParam2);
         etResult.setText("");
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(etResult, InputMethodManager.SHOW_IMPLICIT);
-
-
-        //calac UTC Offset
 
         TimeZone tz = TimeZone.getDefault();
         Date now = new Date();
@@ -429,6 +430,17 @@ public class MainActivity extends AppCompatActivity
         myThread= new Thread(myRunnableThread);
         myThread.start();
 
+
+        etResult.postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                etResult.requestFocus();
+                imm.showSoftInput(etResult, InputMethodManager.SHOW_IMPLICIT);
+                // imm.showSoftInput(editText, 0);
+            }
+        }, 100);
     }
 
     protected int InitRoundHelperAction(){
@@ -733,6 +745,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+        if (imm==null) {
+            imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        }
 
         if (!(ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
@@ -979,7 +994,8 @@ public class MainActivity extends AppCompatActivity
         tv1.setText(savedInstanceState.getString(FIRST_PARAM,"0"));
         tv2.setText(savedInstanceState.getString(SECOND_PARAM,"0"));
         tvop.setText(savedInstanceState.getString(OPERATOR_PARAM,"+"));
-
+        imm=null;
+        imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         super.onRestoreInstanceState(savedInstanceState);
     }
 
