@@ -49,8 +49,8 @@ import java.util.TimeZone;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static final Integer MAX_CHILDEREN = 6;
-    public static final Integer MAX_Q_TO_INFO = 30;
+    public static final Integer MAX_CHILDEREN = 5;
+    public static final Integer MAX_Q_TO_INFO = 20;
     public static final Boolean TRACE_FLAG = false;
     public static final String CHILD_MODE = "CHILD_MODE";
     public static final String CHILD_MODE_VALUE_ADD = "ADD";
@@ -87,6 +87,8 @@ public class MainActivity extends AppCompatActivity
     // Last Ex
     String   lastParam1,lastParam2,lastOp;
     InputMethodManager imm=null;
+    Random   r1=null;
+    Random   r2=null;
 
 
     @Override
@@ -283,8 +285,13 @@ public class MainActivity extends AppCompatActivity
         c.set(Calendar.MILLISECOND, 0);
         long millis = (System.currentTimeMillis() - c.getTimeInMillis());
 
-        Random r1 = new Random(millis);
-        Random r2 = new Random(SystemClock.uptimeMillis());
+        if (r1==null){
+            r1 = new Random(millis);
+        }
+        if (r2==null){
+            r2 = new Random(SystemClock.uptimeMillis());
+        }
+
 
         Integer n1start;
         Integer n1end;
@@ -467,7 +474,7 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         }
-        Random r = new Random(new Date().getTime() % 86400);
+        Random r = new Random(new Date().getTime() );
         Integer n1=r.nextInt(num);
         int num2 = -1;
         for(int i=0;i<4;i++)
@@ -646,8 +653,8 @@ public class MainActivity extends AppCompatActivity
                                         }
                                         @Override
                                         public void OnParentResetInfo() {
-                                            ResetChildCounters();
-                                            InitRound();
+                                            //ResetChildCounters();
+                                            //InitRound();
                                             cid.dismiss();
                                         }
                                     };
@@ -762,6 +769,13 @@ public class MainActivity extends AppCompatActivity
             ivbad.setVisibility(View.GONE);
 
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        r1=null;
+        r2=null;
     }
 
     @Override
@@ -1101,7 +1115,6 @@ public class MainActivity extends AppCompatActivity
         if (m_selectedChild==null) {
             return;
         }
-        ChildInfo ret=new ChildInfo();
 
         m_selectedChild.setAddG2(0);
         m_selectedChild.setAddTime2(0L);
@@ -1154,9 +1167,7 @@ public class MainActivity extends AppCompatActivity
             }
             @Override
             public void OnParentResetInfo() {
-                ResetChildCounters();
                 ResetParentCounters();
-                InitRound();
                 cid.dismiss();
             }
         };
