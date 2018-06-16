@@ -67,6 +67,15 @@ public class MainActivity extends AppCompatActivity
     public static final String FIRST_PARAM="firstp";
     public static final String SECOND_PARAM="secondp";
     public static final String OPERATOR_PARAM="+";
+    public static final String SAVE_LASTP1="lastparam1";
+    public static final String SAVE_LASTP2="lastparam2";
+    public static final String SAVE_LASTPOP="lastparamop";
+    public static final String SAVE_INANIMATION="inanimation";
+    public static final String SAVE_TRY_AGAIN_COUNTER="tryagaincounter";
+    public static final String SAVE_TRY_COUNTER="trycounter";
+    public static final String SAVE_LAST_RESULT="lastresult";
+    public static final String SAVE_UTC_OFFSET="utcoffset";
+    public static final String SAVE_BMY_THREADSTOP="bmythreadstop";
 
     ImageView ivgood;
     ImageView ivbad;
@@ -89,7 +98,8 @@ public class MainActivity extends AppCompatActivity
     InputMethodManager imm=null;
     Random   r1=null;
     Random   r2=null;
-
+    Integer  tryCounter=0;
+    Integer  lastResult=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +112,17 @@ public class MainActivity extends AppCompatActivity
             tv1.setText(savedInstanceState.getString(FIRST_PARAM,"0"));
             tv2.setText(savedInstanceState.getString(SECOND_PARAM,"0"));
             tvop.setText(savedInstanceState.getString(OPERATOR_PARAM,"+"));
+
+            lastParam1=savedInstanceState.getString(SAVE_LASTP1,"0");
+            lastParam2=savedInstanceState.getString(SAVE_LASTP2,"0");
+            lastOp=savedInstanceState.getString(SAVE_LASTPOP,"+");
+            inAnimation=savedInstanceState.getBoolean(SAVE_INANIMATION,false);
+            TryAgainCounter=savedInstanceState.getInt(SAVE_TRY_AGAIN_COUNTER,0);
+            tryCounter=savedInstanceState.getInt(SAVE_TRY_COUNTER,0);
+            lastResult=savedInstanceState.getInt(SAVE_LAST_RESULT,0);
+            utcOffset=savedInstanceState.getLong(SAVE_UTC_OFFSET,new Date().getTime());
+            bmyThreadStop=savedInstanceState.getBoolean(SAVE_BMY_THREADSTOP,false);
+
         }
 
         /* ------------------------------------------ */
@@ -262,6 +283,8 @@ public class MainActivity extends AppCompatActivity
     {
 
         TryAgainCounter=0;
+        // Reset Try Counter
+        tryCounter=0;
         ivgood.setVisibility(View.GONE);
         ivbad.setVisibility(View.GONE);
 
@@ -495,6 +518,8 @@ public class MainActivity extends AppCompatActivity
     protected void CheckResults(){
 
         TryAgainCounter=0;
+        tryCounter++;
+        lastResult=0;
 
         if (myThread!=null)
         {
@@ -530,7 +555,8 @@ public class MainActivity extends AppCompatActivity
                 }
                 else
                 {
-                        BadSign();
+                    lastResult=n1+n2;
+                    BadSign();
                 }
             }
             else if (tvop.getText().toString()=="-") {
@@ -552,7 +578,8 @@ public class MainActivity extends AppCompatActivity
                 }
                 else
                 {
-                        BadSign();
+                    lastResult=n1-n2;
+                    BadSign();
                 }
             }else if (tvop.getText().toString()=="X") {
                 if (m_selectedChild!=null){
@@ -572,7 +599,8 @@ public class MainActivity extends AppCompatActivity
                 }
                 else
                 {
-                        BadSign();
+                    lastResult=n1 * n2;
+                    BadSign();
                 }
             }else {
                 if (m_selectedChild!=null){
@@ -591,7 +619,8 @@ public class MainActivity extends AppCompatActivity
                 }
                 else
                 {
-                        BadSign();
+                    lastResult=n1 / n2;
+                    BadSign();
                 }
             }
         }
@@ -667,22 +696,42 @@ public class MainActivity extends AppCompatActivity
                         }
                     }
                     if (TryAgainCounter==1) {
-                        final TryAgainDialog tad = new TryAgainDialog(MainActivity.this);
-                        tad.doTryAgain = new TryAgainDialog.OnTryAgainListener() {
-                            @Override
-                            public void OnTryAgain(boolean isTryAgain) {
-                                if (isTryAgain) {
-                                    InitRoundRetry();
+                        if (tryCounter<3) {
 
-                                } else {
-                                    InitRound();
-                                    tad.dismiss();
+                            final TryAgainDialog tad = new TryAgainDialog(MainActivity.this);
+                            tad.doTryAgain = new TryAgainDialog.OnTryAgainListener() {
+                                @Override
+                                public void OnTryAgain(boolean isTryAgain) {
+                                    if (isTryAgain) {
+                                        InitRoundRetry();
+
+                                    } else {
+                                        InitRound();
+                                        tad.dismiss();
+                                    }
                                 }
-                            }
-                        };
-                        tad.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                        TryAgainCounter=0;
-                        tad.show();
+                            };
+                            tad.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            TryAgainCounter = 0;
+                            tad.show();
+                        }
+                        else
+                        {
+                            // Show the correct Result
+                            final CorrectResultDialog crd=
+                              new CorrectResultDialog(MainActivity.this,lastParam1,lastOp,lastParam2,lastResult.toString());
+                            crd.closeListener = new CorrectResultDialog.OnCloseCorrectResultInfoListener() {
+                                @Override
+                                public void OnCloseCorrectResult() {
+
+                                    InitRound();
+                                    crd.dismiss();
+                                }
+                            };
+                            crd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            crd.show();
+
+                        }
                     }
                     /*****************
                      * End Try again Dialog
@@ -1000,7 +1049,17 @@ public class MainActivity extends AppCompatActivity
 
         outState.putString(FIRST_PARAM,tv1.getText().toString());
         outState.putString(SECOND_PARAM,tv1.getText().toString());
-        outState.putString(OPERATOR_PARAM,"+");
+        outState.putString(OPERATOR_PARAM,tvop.getText().toString());
+        outState.putString(SAVE_LASTP1,this.lastParam1);
+        outState.putString(SAVE_LASTP2,this.lastParam2);
+        outState.putString(SAVE_LASTPOP,this.lastOp);
+        outState.putBoolean(SAVE_INANIMATION,inAnimation);
+        outState.putInt(SAVE_TRY_AGAIN_COUNTER,TryAgainCounter);
+        outState.putInt(SAVE_TRY_COUNTER,tryCounter);
+        outState.putInt(SAVE_LAST_RESULT,lastResult);
+        outState.putLong(SAVE_UTC_OFFSET,utcOffset);
+        outState.putBoolean(SAVE_BMY_THREADSTOP,bmyThreadStop);
+
     }
 
     @Override
@@ -1008,6 +1067,17 @@ public class MainActivity extends AppCompatActivity
         tv1.setText(savedInstanceState.getString(FIRST_PARAM,"0"));
         tv2.setText(savedInstanceState.getString(SECOND_PARAM,"0"));
         tvop.setText(savedInstanceState.getString(OPERATOR_PARAM,"+"));
+
+        lastParam1=savedInstanceState.getString(SAVE_LASTP1,"0");
+        lastParam2=savedInstanceState.getString(SAVE_LASTP2,"0");
+        lastOp=savedInstanceState.getString(SAVE_LASTPOP,"+");
+        inAnimation=savedInstanceState.getBoolean(SAVE_INANIMATION,false);
+        TryAgainCounter=savedInstanceState.getInt(SAVE_TRY_AGAIN_COUNTER,0);
+        tryCounter=savedInstanceState.getInt(SAVE_TRY_COUNTER,0);
+        lastResult=savedInstanceState.getInt(SAVE_LAST_RESULT,0);
+        utcOffset=savedInstanceState.getLong(SAVE_UTC_OFFSET,new Date().getTime());
+        bmyThreadStop=savedInstanceState.getBoolean(SAVE_BMY_THREADSTOP,false);
+
         imm=null;
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         super.onRestoreInstanceState(savedInstanceState);

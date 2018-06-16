@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import java.util.Date;
 
-public class ChildInfoDialog extends Dialog implements View.OnClickListener {
+public class ChildInfoDialog extends Dialog  {
     public Activity c;
     public Dialog d;
     private Button ok,okreset;
@@ -32,12 +32,14 @@ public class ChildInfoDialog extends Dialog implements View.OnClickListener {
     public ChildInfoDialog(Activity a) {
         super(a);
         this.c = a;
+        setCancelable(false);
     }
 
     public ChildInfoDialog(Activity a,ChildInfo _childInfo) {
         super(a);
         this.c = a;
         childInfo=_childInfo;
+        setCancelable(false);
     }
 
     public void setResetVisible(){
@@ -68,8 +70,6 @@ public class ChildInfoDialog extends Dialog implements View.OnClickListener {
         setContentView(R.layout.child_info_dialog);
         ok = findViewById(R.id.btn_okchildinfo);
         okreset=findViewById(R.id.btn_okchildreset);
-        ok.setOnClickListener(this);
-        okreset.setOnClickListener(this);
 
         if (this.isResetVisible){
             okreset.setVisibility(View.VISIBLE);
@@ -134,24 +134,25 @@ public class ChildInfoDialog extends Dialog implements View.OnClickListener {
         Integer grandError= childInfo.getAddBad()+childInfo.getSubBad()+
                 childInfo.getMultBad()+childInfo.getDivBad();
         tvGrandError.setText(grandError.toString());
-    }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btn_okchildinfo:
+
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 if (doOK!=null){
                     doOK.OnChildInfo();
                 }
-                break;
-            case R.id.btn_okchildreset:
+                dismiss();
+            }
+        });
+        okreset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 if (doOK!=null){
                     doOK.OnParentResetInfo();
                 }
-                break;
-            default:
-                break;
-        }
-        dismiss();
+                dismiss();
+            }
+        });
     }
 }

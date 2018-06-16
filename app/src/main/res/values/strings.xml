@@ -56,5 +56,6 @@
     <string name="tbl_deviation">Dev.</string>
 
     <string name="lbl_lastscore">Last Reset Date:</string>
+    <string name="lbl_correctresult">The Correct Result is:</string>
 
 </resources>

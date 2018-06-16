@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 
-public class TryAgainDialog extends Dialog implements View.OnClickListener {
+public class TryAgainDialog extends Dialog  {
     public Activity c;
     public Dialog d;
     public Button yes, no;
@@ -16,6 +16,7 @@ public class TryAgainDialog extends Dialog implements View.OnClickListener {
         super(a);
         // TODO Auto-generated constructor stub
         this.c = a;
+        setCancelable(false);
     }
 
     public interface  OnTryAgainListener {
@@ -33,27 +34,23 @@ public class TryAgainDialog extends Dialog implements View.OnClickListener {
         setContentView(R.layout.tryagain_dialog);
         yes = (Button) findViewById(R.id.btn_yes);
         no = (Button) findViewById(R.id.btn_no);
-        yes.setOnClickListener(this);
-        no.setOnClickListener(this);
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btn_yes:
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 if (doTryAgain!=null){
                     doTryAgain.OnTryAgain(true);
                 }
-                break;
-            case R.id.btn_no:
+                dismiss();
+            }
+        });
+        no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 if (doTryAgain!=null){
                     doTryAgain.OnTryAgain(false);
                 }
                 dismiss();
-                break;
-            default:
-                break;
-        }
-        dismiss();
+            }
+        });
     }
 }
