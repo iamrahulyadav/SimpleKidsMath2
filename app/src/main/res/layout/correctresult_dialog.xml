@@ -14,7 +14,7 @@
         android:layout_margin="5dp"
         android:text="@string/lbl_correctresult"
         android:textColor="@android:color/white"
-        android:textSize="20dp"
+        android:textSize="25dp"
         android:paddingTop="10dp"
         android:paddingBottom="5dp"
         android:textStyle="normal"/>
@@ -36,7 +36,7 @@
             android:layout_weight="1"
             android:textColor="@android:color/white"
             android:textStyle="bold"
-            android:textSize="24dp"
+            android:textSize="20dp"
             android:id="@+id/textresfactor1"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
@@ -47,7 +47,7 @@
             android:layout_weight="1"
             android:textColor="@android:color/white"
             android:textStyle="bold"
-            android:textSize="24dp"
+            android:textSize="20dp"
             android:id="@+id/textresfactorop"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
@@ -58,7 +58,7 @@
             android:layout_weight="1"
             android:textColor="@android:color/white"
             android:textStyle="bold"
-            android:textSize="24dp"
+            android:textSize="20dp"
             android:id="@+id/textresfactor2"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
@@ -69,7 +69,7 @@
             android:layout_weight="1"
             android:textColor="@android:color/white"
             android:textStyle="bold"
-            android:textSize="24dp"
+            android:textSize="20dp"
             android:id="@+id/textresfactoreq" />
 
         <TextView
@@ -79,7 +79,7 @@
             android:layout_weight="1"
             android:textColor="@android:color/white"
             android:textStyle="bold"
-            android:textSize="24dp"
+            android:textSize="20dp"
             android:id="@+id/textresval"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
