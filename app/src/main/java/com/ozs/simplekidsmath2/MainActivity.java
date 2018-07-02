@@ -56,6 +56,8 @@ public class MainActivity extends AppCompatActivity
     public static final String CHILD_MODE_VALUE_ADD = "ADD";
     public static final String CHILD_MODE_VALUE_CHG = "CHG";
     public static final String CHILD_MODE_ID = "CHILD_MODE_ID";
+    public static final Integer MEDALS_STEP1=2;
+    public static final Integer MEDALS_STEP2=3;
 
     protected ChildrenList m_clist;
     protected ChildrenListPresentor m_clistPresentor;
@@ -93,6 +95,8 @@ public class MainActivity extends AppCompatActivity
     ImageView oppView;
     boolean   inAnimation=false;
     Integer   TryAgainCounter=0;
+    ImageView imgMedal1Bronze,imgMedal1Silver,imgMedal1Gold;
+    ImageView imgMedal2Bronze,imgMedal2Silver,imgMedal2Gold;
     // Last Ex
     String   lastParam1,lastParam2,lastOp;
     InputMethodManager imm=null;
@@ -226,6 +230,7 @@ public class MainActivity extends AppCompatActivity
         });
 
         CheckBounderies();
+        setMedals();
         InitRound();
 
     }
@@ -629,6 +634,7 @@ public class MainActivity extends AppCompatActivity
         }
         finally {
             ChildrenList.getInstance().SaveData();
+            setMedals();
             //load an animation from XML
             final Animation animation1 = AnimationUtils.loadAnimation(this, animResource);
             animation1.setDuration(1500);
@@ -1027,6 +1033,7 @@ public class MainActivity extends AppCompatActivity
 
         CreateCList();
         m_clist.setSelectedChild(child);
+        setMedals();
         // Leave the drawer open
     }
 
@@ -1243,5 +1250,52 @@ public class MainActivity extends AppCompatActivity
         };
         cid.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         cid.show();
+    }
+    protected void setMedalsObjs(){
+
+        imgMedal1Bronze=findViewById(R.id.imageViewMedalBronze1);
+        imgMedal1Silver=findViewById(R.id.imageViewMedalSilver1);
+        imgMedal1Gold=findViewById(R.id.imageViewMedalGold1);
+
+        imgMedal2Bronze=findViewById(R.id.imageViewMedalBronze2);
+        imgMedal2Silver=findViewById(R.id.imageViewMedalSilver2);
+        imgMedal2Gold=findViewById(R.id.imageViewMedalGold2);
+
+        imgMedal1Bronze.setVisibility(View.INVISIBLE);
+        imgMedal1Silver.setVisibility(View.INVISIBLE);
+        imgMedal1Gold.setVisibility(View.INVISIBLE);
+        imgMedal2Bronze.setVisibility(View.INVISIBLE);
+        imgMedal2Silver.setVisibility(View.INVISIBLE);
+        imgMedal2Gold.setVisibility(View.INVISIBLE);
+
+    }
+    protected void setMedals(){
+        setMedalsObjs();
+        if (m_selectedChild==null)
+        {
+            return;
+        }
+        Integer totalGood = m_selectedChild.getAddG() + m_selectedChild.getSubG() +
+        m_selectedChild.getMultG() + m_selectedChild.getDivG();
+
+        if (totalGood>= MEDALS_STEP1){
+            imgMedal1Bronze.setVisibility(View.VISIBLE);
+        }
+        if (totalGood>= MEDALS_STEP1 * 2 ){
+            imgMedal1Silver.setVisibility(View.VISIBLE);
+        }
+        if (totalGood>= MEDALS_STEP1 * 3 ){
+            imgMedal1Gold.setVisibility(View.VISIBLE);
+        }
+        if (totalGood>= (MEDALS_STEP1 * 3) + MEDALS_STEP2 ){
+            imgMedal2Bronze.setVisibility(View.VISIBLE);
+        }
+        if (totalGood>= (MEDALS_STEP1 * 3) +(MEDALS_STEP2 * 2) ){
+            imgMedal2Silver.setVisibility(View.VISIBLE);
+        }
+        if (totalGood>= (MEDALS_STEP1 * 3) +(MEDALS_STEP2 * 3) ){
+            imgMedal2Gold.setVisibility(View.VISIBLE);
+        }
+
     }
 }
