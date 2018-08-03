@@ -37,6 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
+            android:paddingRight="15dp"
             android:orientation="vertical">
 
             <TextView
@@ -45,14 +46,67 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/lbl_textseconds" />
-
             <TextView
                 android:id="@+id/textseconds"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="0" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingRight="20dp"
+            android:paddingLeft="20dp"
+            android:layout_gravity="right"
+            android:orientation="vertical">
 
+            <ImageView
+                android:id="@+id/imageViewMedalBronze1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/medal1bronze_small" />
+            <ImageView
+                android:id="@+id/imageViewMedalSilver1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/medal1silver_small" />
+            <ImageView
+                android:id="@+id/imageViewMedalGold1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/medal1gold_small" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="right"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imageViewMedalBronze2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/medal2silver_small" />
+            <ImageView
+                android:id="@+id/imageViewMedalSilver2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/medal2silver_small" />
+            <ImageView
+                android:id="@+id/imageViewMedalGold2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/medal2gold_small" />
+        </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>
@@ -114,7 +168,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:orientation="vertical"
-        android:background="@drawable/hicback"
+        android:background="@drawable/bgtree"
         android:layout_marginTop="20dp"
         android:paddingTop="20dp">
 
