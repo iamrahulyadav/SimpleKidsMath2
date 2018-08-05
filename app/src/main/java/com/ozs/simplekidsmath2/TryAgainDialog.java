@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
-
+/*
+  Try Again Dialog (for wrong answer)
+ */
 public class TryAgainDialog extends Dialog  {
     public Activity c;
     public Dialog d;
@@ -22,10 +24,7 @@ public class TryAgainDialog extends Dialog  {
     public interface  OnTryAgainListener {
        void OnTryAgain(boolean isTryAgain);
     }
-
-
     public OnTryAgainListener doTryAgain=null;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

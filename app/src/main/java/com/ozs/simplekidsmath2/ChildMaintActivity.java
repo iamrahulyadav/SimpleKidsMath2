@@ -34,7 +34,9 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
-
+/*
+ * Child Maintenance Activity
+ */
 public class ChildMaintActivity extends AppCompatActivity {
 
     private static final String STATE_NAME="STATE_NAME";
@@ -59,6 +61,7 @@ public class ChildMaintActivity extends AppCompatActivity {
 
         FindViews();
 
+        // Android Standard Destroy Handle
         if (savedInstanceState!=null)
         {
             if (savedInstanceState.containsKey(STATE_NAME))
@@ -126,6 +129,9 @@ public class ChildMaintActivity extends AppCompatActivity {
             return;
         }
     }
+    /*
+      Assigning UI Views
+     */
     protected void FindViews(){
 
         ivSelectedPic=findViewById(R.id.quick_start_cropped_image);
@@ -135,6 +141,9 @@ public class ChildMaintActivity extends AppCompatActivity {
         m_clist=ChildrenList.getInstance();
         m_clist.setContext(this);
     }
+    /*
+      User Reaction for permissions
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -158,7 +167,9 @@ public class ChildMaintActivity extends AppCompatActivity {
         }
     }
 
-
+    /*
+      Standard Android Event
+     */
     @Override
     protected void onResume() {
         super.onResume();
@@ -175,12 +186,17 @@ public class ChildMaintActivity extends AppCompatActivity {
         }
         return true;
     }
+    /*
+      Save on "Back" Pressed
+     */
     @Override
     public void onBackPressed()
     {
         SavePreferences(true);
     }
-
+    /*
+      Save of Back Pressed
+     */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         // OnKeyPressed is not supported below android 5
@@ -196,7 +212,9 @@ public class ChildMaintActivity extends AppCompatActivity {
         return true;
         // return super.onKeyDown(keyCode, event);
     }
-
+    /*
+      State Handlers
+     */
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
@@ -253,6 +271,9 @@ public class ChildMaintActivity extends AppCompatActivity {
             finish();
         }
     }
+    /*
+      Activity Result from the "Choose" Image
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 

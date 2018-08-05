@@ -13,7 +13,9 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+/*
+ *  Child Options Activity
+ */
 public class OptionsActivity extends AppCompatActivity {
 
     private static final String STATE_MIN="STATE_MIN";
@@ -61,7 +63,9 @@ public class OptionsActivity extends AppCompatActivity {
         UpdateUIFromPreferences();
 
     }
-
+    /*
+      Assign Views
+     */
     protected void FindViews()
     {
         etMinValue=findViewById(R.id.editTextMin);
@@ -79,7 +83,9 @@ public class OptionsActivity extends AppCompatActivity {
         tvError2=findViewById(R.id.optionsErrorMsg2);
 
     }
-
+    /*
+      onResume - Standard android event
+     */
     @Override
     protected void onResume() {
         super.onResume();
@@ -87,12 +93,18 @@ public class OptionsActivity extends AppCompatActivity {
         android.support.v7.app.ActionBar actionBar = this.getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
+    /*
+      Menu Options setting
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
       //  MenuInflater inflater = getMenuInflater();
       //  inflater.inflate(R.menu.main, menu);
         return true;
     }
+    /*
+      Menu Options Results
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
 
@@ -104,12 +116,17 @@ public class OptionsActivity extends AppCompatActivity {
         }
         return true;
     }
+    /*
+      Save Preferences on "Back" Pressed
+     */
     @Override
     public void onBackPressed()
     {
         SavePreferences(true);
     }
-
+    /*
+       Handle "Back"
+     */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         // OnKeyPressed is not supported below android 5
@@ -121,7 +138,9 @@ public class OptionsActivity extends AppCompatActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
-
+    /*
+      Save State
+     */
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
@@ -136,7 +155,9 @@ public class OptionsActivity extends AppCompatActivity {
         outState.putBoolean(STATE_ISMULT,cbMultOp.isChecked());
         outState.putBoolean(STATE_ISDIV,cbDivOp.isChecked());
     }
-
+    /*
+      Restore State
+     */
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
@@ -172,7 +193,9 @@ public class OptionsActivity extends AppCompatActivity {
             cbDivOp.setChecked(savedInstanceState.getBoolean(STATE_ISDIV));
         }
     }
-
+    /*
+       Update UI With the current preferences
+     */
     private void UpdateUIFromPreferences()
     {
         m_clist.setContext(this);
@@ -193,6 +216,9 @@ public class OptionsActivity extends AppCompatActivity {
         tvError2.setText("");
 
     }
+    /*
+       Validate input
+     */
     private Boolean Validate() {
         String strMin=etMinValue.getText().toString();
         String strMax=etMaxValue.getText().toString();
@@ -242,10 +268,11 @@ public class OptionsActivity extends AppCompatActivity {
             tvError2.setText(R.string.option_error_fromltto);
             return false;
         }
-
         return true;
-
     }
+    /*
+      Save Preferences
+     */
     private Boolean SavePreferences(Boolean IsFinish)
     {
         m_clist.setContext(this);

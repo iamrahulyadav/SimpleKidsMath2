@@ -45,7 +45,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 import java.util.TimeZone;
-
+/*
+ *   Main Game Activity
+ */
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -111,6 +113,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
+        // Standard onDestry wakeup
         if (savedInstanceState!=null)
         {
             tv1.setText(savedInstanceState.getString(FIRST_PARAM,"0"));
@@ -248,14 +251,18 @@ public class MainActivity extends AppCompatActivity
         }
         return super.onKeyDown(keyCode, event);
     }
-
+    /*
+      Load Children data
+     */
     protected void CreateCList(){
         m_clist=ChildrenList.getInstance();
         m_clist.setContext(this);
         m_clist.LoadData();
 
     }
-
+    /*
+      GPL Find views
+     */
     protected void FindViews()
     {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -305,7 +312,7 @@ public class MainActivity extends AppCompatActivity
         if (child==null){
             child = new Child("dummy");
         }
-
+        // Generate random seeds
         Calendar c = Calendar.getInstance();
         c.set(Calendar.HOUR_OF_DAY, 0);
         c.set(Calendar.MINUTE, 0);
@@ -375,7 +382,7 @@ public class MainActivity extends AppCompatActivity
                 strOp="+";
         }
 
-        // Case of subtracion
+        // Case of "-"
         if (nOp==2)
         {
             tvop.setText("-");
@@ -387,7 +394,7 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         }
-        // case of /
+        // case of "/"
         if (nOp==4) {
 
             if (n2 > n1) {
@@ -477,7 +484,10 @@ public class MainActivity extends AppCompatActivity
             }
         }, 100);
     }
-
+    /*
+      Helper Function to choose the random
+      math operation align with the child options
+     */
     protected int InitRoundHelperAction(){
         int[]  arOp={0,0,0,0};
         arOp[0]=(m_selectedChild.getAdd())?1:0;
@@ -518,7 +528,7 @@ public class MainActivity extends AppCompatActivity
 
     }
     /*
-
+       Check Round Results
      */
     protected void CheckResults(){
 
@@ -633,6 +643,8 @@ public class MainActivity extends AppCompatActivity
         {
         }
         finally {
+            // Decide about the dialogs to display when
+            // the round is finished
             ChildrenList.getInstance().SaveData();
             setMedals();
             //load an animation from XML
@@ -745,7 +757,7 @@ public class MainActivity extends AppCompatActivity
                      //animation1.cancel();
                 }
             });
-
+            // Good resutlt animation display
             aniView.startAnimation(animation1);
             animation1.start();
             /*
@@ -762,7 +774,9 @@ public class MainActivity extends AppCompatActivity
             */
         }
     }
-
+    /*
+       Helper funstion for displaying seconds
+     */
     public void doWork() {
         runOnUiThread(new Runnable() {
             public void run() {
@@ -870,7 +884,9 @@ public class MainActivity extends AppCompatActivity
             }
         }
     }
-
+    /*
+      Permissions accept/deny from the user
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -923,7 +939,9 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
+    /*
+     Handle "Back" Pressed
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -1007,7 +1025,9 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
+    /*
+      Switch to another family child
+     */
     protected void SwitchChild(Child child) {
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -1049,7 +1069,9 @@ public class MainActivity extends AppCompatActivity
            }
        }
     }
-
+    /*
+      Save State
+     */
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
@@ -1068,7 +1090,9 @@ public class MainActivity extends AppCompatActivity
         outState.putBoolean(SAVE_BMY_THREADSTOP,bmyThreadStop);
 
     }
-
+    /*
+      Restore State
+     */
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         tv1.setText(savedInstanceState.getString(FIRST_PARAM,"0"));
@@ -1089,7 +1113,9 @@ public class MainActivity extends AppCompatActivity
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         super.onRestoreInstanceState(savedInstanceState);
     }
-
+    /*
+      Animation Settings
+     */
     public void startAnimation(boolean isGoodAnswer)
     {
 
@@ -1128,7 +1154,9 @@ public class MainActivity extends AppCompatActivity
         }
         aniView.setVisibility(View.VISIBLE);
     }
-
+    /*
+      Assign Statistics
+     */
     protected ChildInfo AssignChildInfo(){
         if (m_selectedChild==null) {
             return null;
@@ -1145,7 +1173,9 @@ public class MainActivity extends AppCompatActivity
         ret.setDivTotal(m_selectedChild.getDivNo());
         return ret;
     }
-
+    /*
+      Assign Statistics
+     */
     protected ChildInfo AssignParentInfo(){
         if (m_selectedChild==null) {
             return null;
@@ -1163,7 +1193,9 @@ public class MainActivity extends AppCompatActivity
         ret.setLastScoreReset(m_selectedChild.getLastScoreReset());
         return ret;
     }
-
+    /*
+      Reset Child Statistic Counters
+     */
     protected void ResetChildCounters(){
         if (m_selectedChild==null) {
             return;
@@ -1187,7 +1219,9 @@ public class MainActivity extends AppCompatActivity
 
         ChildrenList.getInstance().SaveData();
     }
-
+    /*
+      Reset Parent Statistic Counters
+     */
     protected void ResetParentCounters(){
         if (m_selectedChild==null) {
             return;
@@ -1212,6 +1246,9 @@ public class MainActivity extends AppCompatActivity
 
         ChildrenList.getInstance().SaveData();
     }
+    /*
+      Helper function to value limits of statistic
+     */
     protected void CheckBounderies() {
         if (m_selectedChild==null)
         {
@@ -1251,6 +1288,9 @@ public class MainActivity extends AppCompatActivity
         cid.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         cid.show();
     }
+    /*
+       find Medals UI Views
+     */
     protected void setMedalsObjs(){
 
         imgMedal1Bronze=findViewById(R.id.imageViewMedalBronze1);
@@ -1269,6 +1309,9 @@ public class MainActivity extends AppCompatActivity
         imgMedal2Gold.setVisibility(View.INVISIBLE);
 
     }
+    /*
+        Display Medals according to results
+     */
     protected void setMedals(){
         setMedalsObjs();
         if (m_selectedChild==null)

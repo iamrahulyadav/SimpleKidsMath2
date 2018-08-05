@@ -12,6 +12,11 @@ import android.widget.TextView;
 
 import java.util.Date;
 
+/*
+ * Child Info Dialog - Information about performance for
+ * the child and parent dialog box
+ * Standard android dialog inheritance
+ */
 public class ChildInfoDialog extends Dialog  {
     public Activity c;
     public Dialog d;
@@ -46,7 +51,6 @@ public class ChildInfoDialog extends Dialog  {
         this.isResetVisible=true;
     }
 
-
     public ChildInfo getChildInfo() {
         return childInfo;
     }
@@ -80,7 +84,7 @@ public class ChildInfoDialog extends Dialog  {
         if (childInfo==null){
             return;
         }
-
+        // UI Assignments
         tvAddTotal= findViewById(R.id.add_total);
         tvAddGood= findViewById(R.id.add_correct);
         tvAddBad= findViewById(R.id.add_error);
@@ -112,6 +116,7 @@ public class ChildInfoDialog extends Dialog  {
         tvDivGood.setText(childInfo.getDivGood().toString());
         tvDivBad.setText(childInfo.getDivBad().toString());
 
+        // Last Score Reset Date
         if(childInfo.getLastScoreReset()<=0L){
             ll_lastscore.setVisibility(View.GONE);
         }else{
@@ -121,6 +126,7 @@ public class ChildInfoDialog extends Dialog  {
             SimpleDateFormat fmtOut = new SimpleDateFormat("dd-MM-yyyy HH:mm");
             tvLastScoreReset.setText(fmtOut.format(date));
         }
+        // Grand Total calculations
         tvGrandTotal=findViewById(R.id.grand_total);
         tvGrandCorrect=findViewById(R.id.grand_correct);
         tvGrandError=findViewById(R.id.grand_error);
@@ -135,6 +141,7 @@ public class ChildInfoDialog extends Dialog  {
                 childInfo.getMultBad()+childInfo.getDivBad();
         tvGrandError.setText(grandError.toString());
 
+        // Events Invokers
 
         ok.setOnClickListener(new View.OnClickListener() {
             @Override

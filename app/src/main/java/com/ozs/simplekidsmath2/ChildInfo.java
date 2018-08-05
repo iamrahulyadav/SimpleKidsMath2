@@ -1,5 +1,8 @@
 package com.ozs.simplekidsmath2;
-
+/*
+  ChildInfo: Information on dialog box for
+  performance evaluation
+ */
 public class ChildInfo {
 
     private Integer  addTotal=0;

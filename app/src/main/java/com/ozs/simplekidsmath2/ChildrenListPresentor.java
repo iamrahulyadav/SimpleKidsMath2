@@ -19,6 +19,7 @@ import java.io.OutputStream;
 
 /**
  * Created by z_savion on 18/02/2018.
+ * Helper Class for Presentation calculations
  */
 public class ChildrenListPresentor {
 
@@ -48,7 +49,9 @@ public class ChildrenListPresentor {
         File sdImagePath = new File(rootPics + File.separator+picName);
         return sdImagePath;
     }
-
+    /*
+      Delete Child Picture
+     */
     public void DeletePic(String picName){
         File root=getPicsDirectory(picName);
         if (root.exists()){
@@ -70,7 +73,9 @@ public class ChildrenListPresentor {
                 }
             }
     }
-
+    /*
+      Assign Image to Image Button
+     */
     public void  AssignImageToImageButton(ImageButton iv, String imageName) {
         File sdImagePath = getPicsDirectory(imageName);
         if (iv != null) {
@@ -82,6 +87,9 @@ public class ChildrenListPresentor {
             }
         }
     }
+    /*
+      Save Image to APP Private Directory
+     */
     public void SaveImage(ImageView iv,String uuId) {
         // Create Pics Directory
 
@@ -143,7 +151,9 @@ public class ChildrenListPresentor {
             }
         }
     }
-
+    /*
+      Copy the Default child image - used for new child
+     */
     public void CopyDefaultImage(String defImageUuid){
 
         try {
@@ -181,7 +191,9 @@ public class ChildrenListPresentor {
             ex1.printStackTrace();
         }
     }
-
+    /*
+      Copy Default Child Image to Image View
+     */
     public void CopyDefaultImageToIV(ImageView iv,String ImageUuid){
         try {
 

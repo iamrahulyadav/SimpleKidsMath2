@@ -6,6 +6,8 @@ import java.util.UUID;
 
 /**
  * Created by z_savion on 08/02/2018.
+ * Main Data Holder for child data
+ * see spec for Fields/Props description
  */
 
 public class Child {

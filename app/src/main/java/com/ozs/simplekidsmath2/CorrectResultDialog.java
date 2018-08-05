@@ -7,7 +7,9 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
-
+/*
+ *  Correct Result Dialog
+ */
 public class CorrectResultDialog extends Dialog {
     public Activity c;
     public Dialog d;

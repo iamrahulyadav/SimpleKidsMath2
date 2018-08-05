@@ -29,6 +29,9 @@ import android.os.Environment;
 
 /**
  * Created by z_savion on 08/02/2018.
+ * Main Data Structure Holder
+ * Data Structure is hold as a XML File in the Private directory
+ * of the APP
  */
 public class ChildrenList {
 
@@ -43,6 +46,9 @@ public class ChildrenList {
     private String m_selectedChildUUID="";
     private ChildrenListPresentor m_clistPresentor=null;
 
+    /*
+     * Factory Pattern
+     */
     public static ChildrenList getInstance()
     {
         if(instance==null)
@@ -79,7 +85,9 @@ public class ChildrenList {
             SaveData();
         }
     }
-
+    /*
+     * Serialize  all Data Strature to XML
+     */
     public void SaveData() {
         try {
 
@@ -97,7 +105,7 @@ public class ChildrenList {
             rootElement.appendChild(selectedChildUUID);
             Element childrensx = doc.createElement("Childrens");
             rootElement.appendChild(childrensx);
-
+            // Loop On ALL Childers
             for (int i = 0; i < childArrayList.size(); i++) {
                 Child child = childArrayList.get(i);
 
@@ -312,6 +320,9 @@ public class ChildrenList {
             }
         }
     }
+    /*
+     * Load XML Data Structure
+     */
     public void LoadData(){
         try {
             String newFileName = myContext.getApplicationInfo().dataDir+"/" + filename;
@@ -331,9 +342,6 @@ public class ChildrenList {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse(fXmlFile);
-            //optional, but recommended
-            //read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
-            //doc.getDocumentElement().normalize();
 
             // Get Selected Child UUID
             NodeList nListSE=doc.getDocumentElement().getElementsByTagName("SelectedChildUUID");
@@ -519,6 +527,7 @@ public class ChildrenList {
                             // childArrayList.add(child);
                         }
                     }
+                    // Insert default child if there is no child
                     if (childArrayList.size()==0)
                     {
                         Child childx=new Child(DEFAULT_CHILD,"Child");
@@ -537,7 +546,9 @@ public class ChildrenList {
             e.printStackTrace();
         }
     }
-
+    /*
+      Helper Function for XML Parsing
+     */
     protected void EnsureTagInt(Document doc,Element eChild, String tagName,Integer defaultValue){
         NodeList nl=eChild.getElementsByTagName(tagName);
         if ((nl==null)||(nl.getLength()==0)) {
@@ -546,6 +557,9 @@ public class ChildrenList {
             eChild.appendChild(param);
         }
     }
+    /*
+      Helper function for XML Parsing
+     */
     protected void EnsureTagLong(Document doc,Element eChild, String tagName,Long defaultValue){
         NodeList nl=eChild.getElementsByTagName(tagName);
         if ((nl==null)||(nl.getLength()==0)) {
@@ -555,11 +569,15 @@ public class ChildrenList {
         }
     }
 
-
+    /*
+      Copy Default child image to new child
+     */
     public void CopyDefaultImage(){
         m_clistPresentor.CopyDefaultImage(DEFAULT_CHILD);
     }
-
+    /*
+      Return Child Array from List
+     */
     public Child[] getChildrenArray(){
         Object[] objs=childArrayList.toArray();
         if (objs.length>0)
@@ -578,6 +596,9 @@ public class ChildrenList {
             return null;
         }
     }
+    /*
+      Menu Helper Function
+     */
     public int GetMinMenuId()
     {
         int min=Integer.MAX_VALUE;
@@ -590,6 +611,9 @@ public class ChildrenList {
         return min;
     }
 
+    /*
+       Menu Helper Function
+     */
     public int GetMaxMenuId()
     {
         int max=Integer.MIN_VALUE;
@@ -601,10 +625,15 @@ public class ChildrenList {
         }
         return max;
     }
+    /*
+      Return Array Size
+     */
     public int GetItemsSize() {
         return childArrayList.size();
     }
-
+    /*
+      Helper Function return child Menu Id
+     */
     public Child GetChildByMenuId(int menueId){
         for(int i=0;i<childArrayList.size();i++){
             Child child=childArrayList.get(i);
@@ -614,7 +643,9 @@ public class ChildrenList {
         }
         return null;
     }
-
+    /*
+      Helper Function for finding match child
+     */
     public boolean CompareChildren(Child child1,Child child2){
         String childId1 = child1.getChildId().toLowerCase().trim().replaceAll("[\\p{Cc}\\p{Cf}\\p{Co}\\p{Cn}]", "?");
         byte[] a = childId1.getBytes(StandardCharsets.UTF_16); // Java 7+ only
@@ -631,7 +662,9 @@ public class ChildrenList {
         }
         return true;
     }
-
+    /*
+      GetChildByChildId - Locate Child
+     */
     public Child GetChildByChildId(String childId){
 
             String childId1 = childId.toLowerCase().trim().replaceAll("[\\p{Cc}\\p{Cf}\\p{Co}\\p{Cn}]", "?");
@@ -661,7 +694,9 @@ public class ChildrenList {
             }
             return null;
     }
-
+    /*
+      Get Child Index By Child Id
+     */
     public Integer GetChildIndexByChildId(String childId){
 
         String childId1 = childId.toLowerCase().trim().replaceAll("[\\p{Cc}\\p{Cf}\\p{Co}\\p{Cn}]", "?");
@@ -691,7 +726,9 @@ public class ChildrenList {
         }
         return -1;
     }
-
+    /*
+      Remove Child
+     */
     public void RemoveChild(Child child){
         Child selectedChild=getSelectedChild();
         boolean isSelected=false;
@@ -723,19 +760,27 @@ public class ChildrenList {
             LoadData();
         }
     }
-
+    /*
+      Set Selected Child - When user select new child
+     */
     public void setSelectedChild(Child child){
         setSelectedChildUUID(child.getChildId());
     }
-
+    /*
+      Set Selected Child - When user select new child
+     */
     public Child getSelectedChild(){
         return GetChildByChildId(getSelectedChildUUID());
     }
-
+    /*
+      Get Selected Child UUID
+     */
     public String getSelectedChildUUID() {
         return m_selectedChildUUID;
     }
-
+    /*
+      Set Selected Child UUID
+     */
     public void setSelectedChildUUID(String m_selectedChild) {
         if (!m_selectedChild.equals(this.m_selectedChildUUID)) {
             this.m_selectedChildUUID = m_selectedChild;
